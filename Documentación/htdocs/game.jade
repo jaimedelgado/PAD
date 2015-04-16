@@ -1,0 +1,50 @@
+doctype 5
+
+html(lang="es")
+
+	head
+		title NeedlePOP!
+
+		//- METAs
+		meta(name='viewport', content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no')
+
+
+		//- Bootstrap CSS
+		link(rel='stylesheet', href='css/bootstrap.min.css')
+		//- Main CSS
+		link(rel='stylesheet', href='css/main.css')
+
+
+	body
+		audio#musica(src='music/game.mp3', loop='loop')
+
+		#container
+
+			header.game
+				.character-grandma
+				.game-info
+					a(href="javascript:history.go(0)").link.btn.btn-blue.btn-next.btn-restart restart
+					.score
+						.points.btn.btn-purple
+							span.value 0000 
+							span.texty score
+					.timer
+						.time.btn.btn-purple
+							span.value 0
+							span.texty seconds
+
+
+			section#sandox
+				canvas#canvas(width='300', height='360')
+
+
+			footer.intro
+				a(href="index.html").btn.btn-red-back.btn-back exit
+
+
+		//- jQuery JS
+		script(src='js/vendor/jquery-2.0.3.min.js')
+		script(src='js/vendor/Box2dWeb-2.1.a.3.js')
+		script(src='js/game.js')
+		script(src='js/main.js')
+

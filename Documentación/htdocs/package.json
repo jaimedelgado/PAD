@@ -1,0 +1,13 @@
+{
+  "name": "needlepop",
+  "version": "0.0.1",
+  "dependencies": {
+    "consolidate": "~0.9.1",
+    "swig": "~0.13.5",
+    "node-uuid": "~1.4.0"
+  },
+  "devDependencies": {
+    "grunt": "~0.4.1",
+    "grunt-bb-generate": "~0.1.5"
+  }
+}
