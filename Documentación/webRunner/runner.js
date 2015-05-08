@@ -12,9 +12,6 @@ var myApp = (function(){
 
 })();
 var iddCaja = 0;
-
-
-
 var itPlayer = 0;
 
 window.addEventListener("load",function() {
@@ -23,13 +20,24 @@ var Q = window.Q = Quintus()
         .include("Sprites, Scenes, Input, 2D, Anim, Touch, UI")
         .setup({ width: 683, height: 384, scaleToFit: true })
         .controls().touch();
-        Q.input.touchControls({
-  controls:  [ ['left','asd' ],
-               ['right','>' ],
-               [],
-               ['action','b'],
-               ['fire', 'a' ]]
-});
+
+  Q.UI.Text.extend("Score",{
+    init:function(p){
+      this._super({label:"Cajas: 0",x:620,y:0});
+      Q.state.on("change.score",this,"score");
+    },
+    score: function(score){
+      this.p.label="Cajas: " + score;
+    }
+  });
+
+  Q.scene("HUD",function(stage){
+    var container = stage.insert(new Q.UI.Container({
+      x:0,y:0
+    }));
+    var label= container.insert(new Q.Score());
+    Q.state.set("score",0);
+  })
 
 var SPRITE_BOX = 1;
 
@@ -42,13 +50,15 @@ Q.Sprite.extend("Player",{
     this._super(p,{
       sheet: "eater",
       sprite: "eater",
-      collisionMask: SPRITE_BOX, 
+      collisionMask: SPRITE_BOX,
+      doubleJump: true,
+      releaseJump: false,
       x: 40,
       y: 555,
       standingPoints: [ [ -16, 44], [ -23, 35 ], [-23,-48], [23,-48], [23, 35 ], [ 16, 44 ]],
       duckingPoints : [ [ -16, 44], [ -23, 35 ], [-23,-10], [23,-10], [23, 35 ], [ 16, 44 ]],
       speed: 500,
-      jump: -800
+      jump: -600
     });
 
     this.p.points = this.p.standingPoints;
@@ -69,12 +79,21 @@ Q.Sprite.extend("Player",{
       this.p.landed = 0;
     }
 
+    if(this.p.doubleJump && this.p.releaseJump)
+      if(Q.inputs['up']){
+        console.log("doble");
+        this.p.vy = this.p.jump;
+        this.p.doubleJump = false; 
+      }
+
     if(Q.inputs['up'] && this.p.landed > 0) {
-      this.p.vy = this.p.jump;
-    } 
+        this.p.vy = this.p.jump;
+    }
 
     this.p.points = this.p.standingPoints;
     if(this.p.landed) {
+      this.p.doubleJump = true;
+      this.p.releaseJump = false;
       if(Q.inputs['down'] && this.p.animation != "eat") { 
         this.play("down");
         this.p.points = this.p.duckingPoints;
@@ -83,6 +102,8 @@ Q.Sprite.extend("Player",{
         this.play("walk");
       }
     } else {
+      if(!Q.inputs['up'])
+        this.p.releaseJump = true;  
       //this.play("jump_right");
     }
 
@@ -91,13 +112,17 @@ Q.Sprite.extend("Player",{
   }
 });
 
+Q.component("defaultEnemy", {
+  added: function(){
+      var entity = this.entity;
+
+  }
+});
+
 Q.Sprite.extend("Box",{
   init: function() {
-
-
     var levels = [  540,  450 ];
     //var levels = [ 565, 540, 500, 450 ];
-
     var player = Q("Player").first();
     this._super({
       x: player.p.x + Q.width + 50,
@@ -115,7 +140,6 @@ Q.Sprite.extend("Box",{
 
     this.on("hit");
   },
-
   step: function(dt) {
     this.p.x += this.p.vx * dt;
 
@@ -125,11 +149,8 @@ Q.Sprite.extend("Box",{
     if(this.p.y != 565) {
       this.p.angle += this.p.theta * dt;
     }
-
     if(this.p.y > 800) { this.destroy(); }
-
   },
-
   hit: function() {
     this.p.type = 0;
     this.p.collisionMask = Q.SPRITE_NONE;
@@ -137,11 +158,7 @@ Q.Sprite.extend("Box",{
     this.p.ay = 400;
     this.p.vy = -300;
     this.p.opacity = 0.5;
-
-
   }
-  
-
 });
 
 
@@ -191,6 +208,7 @@ Q.Sprite.extend("BoxGood",{
   sensor: function(collision) {
     var playerObj = collision.obj;
     if(!this.p.touched && playerObj.isA("Player")){
+      Q.state.inc("score", 1);
       this.p.touched = true; 
       playerObj.play("eat");
       var playerVel = playerObj.p.vx;
@@ -277,6 +295,7 @@ Q.load("mina.png, mina.json, eater.json, eater.png, player.json, player.png, bac
       duck_right: { frames: [15], rate: 1/10, flip: false },
     });
     Q.stageScene("level1");
+    Q.stageScene("HUD", 1);
   
 });
 
