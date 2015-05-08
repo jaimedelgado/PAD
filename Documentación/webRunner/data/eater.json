@@ -1,0 +1,4 @@
+{
+	"eater":{"sx":0,"sy":0,"cols":5,"tilew":72,"tileh":98,"frames":5},
+	"eater_down":{"sx":0,"sy":98,"tilew":98,"tileh":98,"frames":1}
+}
