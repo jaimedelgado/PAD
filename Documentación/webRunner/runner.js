@@ -54,11 +54,12 @@ Q.Sprite.extend("Player",{
       doubleJump: true,
       releaseJump: false,
       x: 40,
-      y: 555,
+      shield: false,
+      y: 559,
       standingPoints: [ [ -16, 44], [ -23, 35 ], [-23,-48], [23,-48], [23, 35 ], [ 16, 44 ]],
       duckingPoints : [ [ -16, 44], [ -23, 35 ], [-23,-10], [23,-10], [23, 35 ], [ 16, 44 ]],
       speed: 500,
-      jump: -600
+      jump: -600,
     });
 
     this.p.points = this.p.standingPoints;
@@ -66,27 +67,42 @@ Q.Sprite.extend("Player",{
     this.play("walk");
   },
 
+  setShield : function(activated){
+    if(activated)
+      this.p.shield = true;
+    else
+      this.p.shield = false;
+
+  }
+  ,
   step: function(dt) {
    // console.log("player: iteracion-> " + itPlayer + " x-> " + this.p.x + " y-> " + this.p.y );
 
     this.p.vx += (this.p.speed - this.p.vx)/4;
 
-    if(this.p.y > 555) {
-      this.p.y = 555;
+
+    if(this.p.vy == 0)
+      console.log("aire");
+
+    if(this.p.y > 559 || this.p.vy == 0 ) {
+      if(this.p.y > 559)
+        this.p.y = 559; 
       this.p.landed = 1;
       this.p.vy = 0;
     } else {
       this.p.landed = 0;
     }
 
-    if(this.p.doubleJump && this.p.releaseJump)
+    if(this.p.doubleJump && this.p.releaseJump){
       if(Q.inputs['up']){
-        console.log("doble");
-        this.p.vy = this.p.jump;
-        this.p.doubleJump = false; 
-      }
+        //this.stage.insert(new Q.Ameba());
 
-    if(Q.inputs['up'] && this.p.landed > 0) {
+        this.p.vy = this.p.jump;
+        this.p.doubleJump = false;
+      }
+    }
+
+    if(Q.inputs['up'] && this.p.landed > 0 ) {
         this.p.vy = this.p.jump;
     }
 
@@ -94,7 +110,9 @@ Q.Sprite.extend("Player",{
     if(this.p.landed) {
       this.p.doubleJump = true;
       this.p.releaseJump = false;
-      if(Q.inputs['down'] && this.p.animation != "eat") { 
+      if(Q.inputs['down'] && this.p.animation != "eat") {
+        this.p.w = 98;
+        console.log(this);
         this.play("down");
         this.p.points = this.p.duckingPoints;
       } else {
@@ -102,9 +120,15 @@ Q.Sprite.extend("Player",{
         this.play("walk");
       }
     } else {
-      if(!Q.inputs['up'])
-        this.p.releaseJump = true;  
-      //this.play("jump_right");
+      if(!Q.inputs['up']){
+        this.p.releaseJump = true;
+      }
+      if(this.p.animation != "eat" && this.p.vy < 0)
+        this.play("jump_up");
+      else if(this.p.animation != "eat"){
+        this.play("jump_down");
+      }
+      //this.play("jump");
     }
 
     this.stage.viewport.centerOn(this.p.x + 175, 500 );
@@ -152,12 +176,16 @@ Q.Sprite.extend("Box",{
     if(this.p.y > 800) { this.destroy(); }
   },
   hit: function() {
-    this.p.type = 0;
-    this.p.collisionMask = Q.SPRITE_NONE;
-    this.p.vx = 200;
-    this.p.ay = 400;
-    this.p.vy = -300;
-    this.p.opacity = 0.5;
+    if(this.p.type != 0){
+      this.p.type = 0;
+      console.log("colision");
+      this.p.collisionMask = Q.SPRITE_NONE;
+
+      this.p.opacity = 0.5;
+    }
+      this.p.vx = 200;
+      this.p.ay = 400;
+      this.p.vy = -300;
   }
 });
 
@@ -166,7 +194,7 @@ Q.Sprite.extend("Box",{
 Q.Sprite.extend("BoxGood",{
   init: function() {
 
-    var levels = [ 565, 500, 450 ];
+    var levels = [ 570 , 500, 450 ];
 
     var player = Q("Player").first();
     this._super({
@@ -176,7 +204,7 @@ Q.Sprite.extend("BoxGood",{
       //frame: Math.random() < 0.5 ? 1 : 0,
       scale: 0.9,
       type: SPRITE_BOX,
-      sheet: "cajaBuena",
+      sheet: "mina",
       vx: -200 + 200 * Math.random(),
       vy: 0,
       ay: 0,
@@ -213,11 +241,212 @@ Q.Sprite.extend("BoxGood",{
       playerObj.play("eat");
       var playerVel = playerObj.p.vx;
       //console.log("caja: x-> " + this.p.x + " y-> " + this.p.y + " |  Pj: x-> " + collision.obj.p.x + " y-> " + collision.obj.p.y);
-      this.animate({y: playerObj.p.y, vx: playerVel + playerVel/2, opacity: 0, scale: 0.1}, 1/5, {callback: function(){this.destroy();}});
+      this.animate({y: playerObj.p.y, vx: playerVel + playerVel/1.5, opacity: 0, scale: 0.1}, 1/5, {callback: function(){this.destroy();}});
     }else{
     }
 
      /*  
+    this.p.type = 0;
+    this.p.collisionMask = Q.SPRITE_NONE;
+    this.p.vx = 200;
+    this.p.ay = 400;
+    this.p.vy = -300;
+    this.p.opacity = 1;
+  */
+  }
+  
+
+});
+
+
+
+Q.Sprite.extend("BoxFija",{
+  init: function(tipo) {
+
+    var levels = [ 573 , 515 , 509 ];
+
+    var player = Q("Player").first();
+    this._super({
+      touched: false,
+      x: player.p.x + Q.width + 50,
+      y: tipo == "doble" ? 517  : 573,
+      //frame: Math.random() < 0.5 ? 1 : 0,
+      scale: 0.9,
+      type: SPRITE_BOX,
+      sheet: "cajaBuena",
+      vx: 50,
+      vy: 0,
+      ay: 0,
+    });
+
+    this.add("animation, tween");
+
+    this.on("hit", this, "sensor");
+
+    //this.add("animation, tween");
+  },
+
+  step: function(dt) {
+    this.p.x += this.p.vx * dt;
+
+
+    this.p.vy += this.p.ay * dt;
+    this.p.y += this.p.vy * dt;
+    
+    if(this.p.y > 800) { this.destroy(); }
+
+  },
+
+  sensor: function(collision) {
+    /*var playerObj = collision.obj;
+    if(!this.p.touched && playerObj.isA("Player")){
+      Q.state.inc("score", 1);
+      this.p.touched = true; 
+      playerObj.play("eat");
+      var playerVel = playerObj.p.vx;
+      //console.log("caja: x-> " + this.p.x + " y-> " + this.p.y + " |  Pj: x-> " + collision.obj.p.x + " y-> " + collision.obj.p.y);
+      this.animate({y: playerObj.p.y, vx: playerVel + playerVel/2, opacity: 0, scale: 0.1}, 1/5, {callback: function(){this.destroy();}});
+    }else{
+    }
+
+      
+    this.p.type = 0;
+    this.p.collisionMask = Q.SPRITE_NONE;
+    this.p.vx = 200;
+    this.p.ay = 400;
+    this.p.vy = -300;
+    this.p.opacity = 1;
+  */
+  }
+  
+
+});
+
+
+
+Q.Sprite.extend("Ameba",{
+  init: function(tipo) {
+
+    var levels = [ 573 , 515 , 509 ];
+
+    var player = Q("Player").first();
+    this._super({
+      player: Q("Player").first(),
+      x: player.p.x,
+      //y: tipo == "doble" ? 515  : 573,
+      y: player.p.y,
+      //frame: Math.random() < 0.5 ? 1 : 0,
+      scale: 1.3,
+      type: 0,
+      opacity: 0.4,
+      sheet: "ameba",
+      sprite: "ameba",
+      vx: player.p.vx,
+      vy: player.p.vy,
+      ay: player.p.ay,
+    });
+
+    this.add("animation, tween");
+    
+    this.play("ameba");
+
+    this.on("hit", this, "sensor");
+
+    },
+
+  step: function(dt) {
+
+    this.p.x = this.p.player.p.x;
+
+    this.p.vy = this.p.player.p.vy;
+    this.p.y = this.p.player.p.y;
+    
+    if(this.p.y > 800) { this.destroy(); }
+
+  },
+
+  sensor: function(collision) {
+    /*var playerObj = collision.obj;
+    if(!this.p.touched && playerObj.isA("Player")){
+      Q.state.inc("score", 1);
+      this.p.touched = true; 
+      playerObj.play("eat");
+      var playerVel = playerObj.p.vx;
+      //console.log("caja: x-> " + this.p.x + " y-> " + this.p.y + " |  Pj: x-> " + collision.obj.p.x + " y-> " + collision.obj.p.y);
+      this.animate({y: playerObj.p.y, vx: playerVel + playerVel/2, opacity: 0, scale: 0.1}, 1/5, {callback: function(){this.destroy();}});
+    }else{
+    }
+
+      
+    this.p.type = 0;
+    this.p.collisionMask = Q.SPRITE_NONE;
+    this.p.vx = 200;
+    this.p.ay = 400;
+    this.p.vy = -300;
+    this.p.opacity = 1;
+  */
+  }
+  
+
+});
+
+Q.Sprite.extend("Escudo",{
+  init: function(tipo) {
+
+    var levels = [ 573 , 515 , 509 ];
+
+    var player = Q("Player").first();
+    this._super({
+      touched: false,
+      x: player.p.x + Q.width + 50,
+      y: 509,
+      scale: 1,
+      type: SPRITE_BOX,
+
+      opacity: 0.8,
+      sheet: "escudo",
+      sprite: "escudo",
+      sensor: true,
+      vx: 50,
+      vy: 0,
+      ay: 0,
+    });
+
+    this.add("animation, tween");
+    
+    this.play("escudo");
+
+    this.on("hit", this, "sensor");
+
+    },
+
+  step: function(dt) {
+
+    this.p.x += this.p.vx * dt;
+
+
+    this.p.vy += this.p.ay * dt;
+    this.p.y += this.p.vy * dt;
+    
+    if(this.p.y > 800) { this.destroy(); }
+
+  },
+
+  sensor: function(collision) {
+    var playerObj = collision.obj;
+    if(!this.p.touched && playerObj.isA("Player")){
+      Q.state.inc("score", 1);
+      this.p.touched = true;
+      if(!playerObj.p.shield){
+        this.stage.insert(new Q.Ameba());
+        playerObj.setShield(true);
+      }
+      //console.log("caja: x-> " + this.p.x + " y-> " + this.p.y + " |  Pj: x-> " + collision.obj.p.x + " y-> " + collision.obj.p.y);
+      this.animate({y: this.p.y - 30}, 1/5, {callback: function(){this.destroy();}});
+    }else{
+    }
+
+      /*
     this.p.type = 0;
     this.p.collisionMask = Q.SPRITE_NONE;
     this.p.vx = 200;
@@ -246,14 +475,24 @@ Q.GameObject.extend("BoxThrower",{
     this.p.launch -= dt;
 
     if(this.p.launch < 0) {
-
+        
       if(Math.floor(Math.random()*2)===1){
-        this.stage.insert(new Q.Box());
+        this.stage.insert(new Q.BoxFija("doble"));
+        this.stage.insert(new Q.BoxFija());
+        this.p.launch = this.p.launchDelay + this.p.launchRandom * Math.random();
+      }else{
+        this.stage.insert(new Q.Escudo());
+        this.p.launch = this.p.launchDelay + this.p.launchRandom * Math.random();
+      }
+        /*
+      }
+      if(Math.floor(Math.random()*2)===1){
+        this.stage.insert(new Q.BoxFija());
         this.p.launch = this.p.launchDelay + this.p.launchRandom * Math.random();
       }else{
         this.stage.insert(new Q.BoxGood());
         this.p.launch = this.p.launchDelay + this.p.launchRandom * Math.random();   
-      }
+      }*/
     }
   }
 
@@ -273,21 +512,37 @@ Q.scene("level1",function(stage) {
   stage.insert(new Q.BoxThrower());
 
   stage.insert(new Q.Player());
+  //stage.insert(new Q.Ameba());
   stage.add("viewport");
 
 });
   
-Q.load("mina.png, mina.json, eater.json, eater.png, player.json, player.png, background-wall.png, suelo.png, crates.png, crates.json, cajaBuena.png, cajaBuena.json", function() {
+Q.load("escudo.png, escudo.json, ameba.png, ameba.json, cajaRota.png, cajaRota.json, mina.png, mina.json, eater.json, eater.png, player.json, player.png, background-wall.png, suelo.png, crates.png, crates.json, cajaBuena.png, cajaBuena.json", function() {
     Q.compileSheets("player.png","player.json");
     Q.compileSheets("crates.png","crates.json");
     Q.compileSheets("cajaBuena.png","cajaBuena.json");
+    Q.compileSheets("cajaRota.png","cajaRota.json");
     Q.compileSheets("eater.png", "eater.json");
     Q.compileSheets("mina.png", "mina.json");
+    Q.compileSheets("ameba.png", "ameba.json");
+    Q.compileSheets("escudo.png", "escudo.json");
+
     Q.animations("eater", {
       walk: { frames: [0,1], rate: 1/4, flip: false, loop: true },
       eat: { frames: [2,3,4], rate: 1/4, flip: false, next: "walk" },
-      down: { frames: [5] },
+      jump_up: { frames: [5] },
+      jump_down: { frames: [6] },
+      down: { frames: [7] },
     });
+
+    Q.animations("escudo", {
+      escudo: { frames: [0,1], rate: 1/3, loop: true }
+    });
+
+    Q.animations("ameba", {
+      ameba: { frames: [0,1,2,3], rate: 1/4, flip: false,  loop: true }
+    });
+
     Q.animations("player", {
       walk_right: { frames: [0,1,2,3,4,5,6,7,8,9,10], rate: 1/15, flip: false, loop: true },
       jump_right: { frames: [13], rate: 1/10, flip: false },
