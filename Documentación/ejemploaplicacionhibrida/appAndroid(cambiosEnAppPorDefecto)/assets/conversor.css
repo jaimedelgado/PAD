@@ -1,0 +1,20 @@
+#panelConversion {
+  margin: 20px;
+  background-color: Khaki;
+}
+
+#panelControl {
+  margin: 20px;
+  background-color: LightYellow ;
+}
+#etiquetaOrigen, #etiquetaResultado {
+  text-decoration: underline;
+}
+#etiquetaResultado {
+  font-style: normal;
+  color: black;
+}
+#error {
+  background-color: Red;
+  font-width: bolder;
+}
