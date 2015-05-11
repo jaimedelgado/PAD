@@ -1,9 +1,9 @@
-var myApp = (function(){
+var infoNativo = (function(){
   var foo = 'Hello World';
   var idCaja = 1;
 
   return{
-    public_property : "hello World publico",
+    coins : 151,
     contCaja : idCaja,
     incrementCaja : function(){
       idCaja = idCaja + 1;
@@ -11,8 +11,6 @@ var myApp = (function(){
   }
 
 })();
-var iddCaja = 0;
-var itPlayer = 0;
 
 window.addEventListener("load",function() {
 
@@ -20,7 +18,7 @@ var Q = window.Q = Quintus()
         .include("Sprites, Scenes, Input, 2D, Anim, Touch, UI")
         .setup({ width: 683, height: 384, scaleToFit: true })
         .controls().touch();
-
+/////////////////////////////////DISTANCIA///////////////////////////////////////////
   Q.UI.Text.extend("Score",{
     init:function(p){
       this._super({label:"Distance: 0m",x:600,y:0});
@@ -37,8 +35,26 @@ var Q = window.Q = Quintus()
     }));
     var label= container.insert(new Q.Score());
     Q.state.set("score",0);
-  })
+  });
+////////////////////////////COINS INFO/////////////////////////////////////////////////////
 
+  Q.UI.Text.extend("Coins",{
+    init:function(p){
+      this._super({label:"Coins: " + infoNativo.coins,x:615,y:30});
+      Q.state.on("change.coins",this,"coins");
+    },
+    coins: function(coins){
+      this.p.label="Coins: " + coins;
+    }
+  });
+
+  Q.scene("HUDCoins",function(stage){
+    var container = stage.insert(new Q.UI.Container({
+      x:0,y:0
+    }));
+    var label= container.insert(new Q.Coins());
+    Q.state.set("coins",infoNativo.coins);
+  });
 var SPRITE_BOX = 1;
 
 Q.gravityY = 2000;
@@ -434,13 +450,17 @@ Q.Sprite.extend("Escudo",{
     });
 
     this.add("animation, tween");
-    
-    this.play("escudo");
-
+    this.animateShield();
     this.on("hit", this, "sensor");
 
     },
 
+  animateShield: function(){
+    this
+      .animate({scale: 0.7}, 0.7 )
+      .chain({scale: 1}, 0.7, {
+        callback: function(){this.animateShield();}});
+  },
   step: function(dt) {
 
     this.p.x += this.p.vx * dt;
@@ -481,6 +501,88 @@ Q.Sprite.extend("Escudo",{
 
 
 
+//////////////////////////////COIN////////////////////////////////
+
+
+Q.Sprite.extend("Coin",{
+  init: function(tipo) {
+
+    var levels = [ 573 , 515 , 509 ];
+
+    var player = Q("Player").first();
+    this._super({
+      touched: false,
+      x: player.p.x + Q.width + 50,
+      y: 509,
+      scale: 0.7,
+      type: SPRITE_BOX,
+      opacity: 1,
+      sheet: "coin",
+      sprite: "coin",
+      sensor: true,
+      vx: 50,
+      vy: 0,
+      ay: 0,
+      theta: (300 * Math.random() + 200) * (Math.random() < 0.5 ? 1 : -1)
+    });
+
+    this.add("tween");
+    
+    this.animateCoin();
+    this.on("hit", this, "sensor");
+
+    },
+
+  step: function(dt) {
+
+    this.p.x += this.p.vx * dt;
+
+    if(this.p.y != 565) {
+      this.p.angle += this.p.theta * dt;
+    }
+
+    this.p.vy += this.p.ay * dt;
+    this.p.y += this.p.vy * dt;
+    
+    if(this.p.y > 800) { this.destroy(); }
+
+  },
+
+  animateCoin: function(){
+    this
+      .animate({scale: 0.5}, 1 )
+      .chain({scale: 0.9}, 1, {
+        callback: function(){this.animateCoin();}});
+  },
+
+  sensor: function(collision) {
+    var playerObj = collision.obj;
+    if(!this.p.touched && playerObj.isA("Player")){
+      this.p.touched = true;
+
+      
+      Q.state.inc("coins", 1);
+      //console.log("caja: x-> " + this.p.x + " y-> " + this.p.y + " |  Pj: x-> " + collision.obj.p.x + " y-> " + collision.obj.p.y);
+      this.animate({y: this.p.y - 30}, 1/5, {callback: function(){this.destroy();}});
+    }else{
+    }
+
+      /*
+    this.p.type = 0;
+    this.p.collisionMask = Q.SPRITE_NONE;
+    this.p.vx = 200;
+    this.p.ay = 400;
+    this.p.vy = -300;
+    this.p.opacity = 1;
+  */
+  }
+  
+
+});
+
+///////////////////////////////////////////////////////////////
+
+
 
 Q.GameObject.extend("BoxThrower",{
   init: function() {
@@ -507,7 +609,7 @@ Q.GameObject.extend("BoxThrower",{
           this.stage.insert(new Q.BoxFija());
           this.p.launch = this.p.launchDelay + this.p.launchRandom * Math.random();
         }else{
-          this.stage.insert(new Q.Escudo());
+          this.stage.insert(new Q.Coin());
           this.p.launch = this.p.launchDelay + this.p.launchRandom * Math.random();
         }
           /*
@@ -544,7 +646,7 @@ Q.scene("level1",function(stage) {
 
 });
   
-Q.load("escudo.png, escudo.json, ameba.png, ameba.json, cajaRota.png, cajaRota.json, mina.png, mina.json, eater.json, eater.png, player.json, player.png, background-wall.png, suelo.png, crates.png, crates.json, cajaBuena.png, cajaBuena.json", function() {
+Q.load("coin.png, coin.json, escudo.png, escudo.json, ameba.png, ameba.json, cajaRota.png, cajaRota.json, mina.png, mina.json, eater.json, eater.png, player.json, player.png, background-wall.png, suelo.png, crates.png, crates.json, cajaBuena.png, cajaBuena.json", function() {
     Q.compileSheets("player.png","player.json");
     Q.compileSheets("crates.png","crates.json");
     Q.compileSheets("cajaBuena.png","cajaBuena.json");
@@ -553,6 +655,7 @@ Q.load("escudo.png, escudo.json, ameba.png, ameba.json, cajaRota.png, cajaRota.j
     Q.compileSheets("mina.png", "mina.json");
     Q.compileSheets("ameba.png", "ameba.json");
     Q.compileSheets("escudo.png", "escudo.json");
+    Q.compileSheets("coin.png", "coin.json");
 
     Q.animations("eater", {
       walk: { frames: [0,1], rate: 1/4, flip: false, loop: true },
@@ -563,7 +666,7 @@ Q.load("escudo.png, escudo.json, ameba.png, ameba.json, cajaRota.png, cajaRota.j
     });
 
     Q.animations("escudo", {
-      escudo: { frames: [0,1], rate: 1/3, loop: true }
+      escudo: { frames: [0] }
     });
 
     Q.animations("ameba", {
@@ -578,6 +681,7 @@ Q.load("escudo.png, escudo.json, ameba.png, ameba.json, cajaRota.png, cajaRota.j
     });
     Q.stageScene("level1");
     Q.stageScene("HUD", 1);
+    Q.stageScene("HUDCoins", 2);
   
 });
 
