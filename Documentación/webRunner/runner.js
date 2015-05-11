@@ -23,11 +23,11 @@ var Q = window.Q = Quintus()
 
   Q.UI.Text.extend("Score",{
     init:function(p){
-      this._super({label:"Cajas: 0",x:620,y:0});
+      this._super({label:"Distance: 0m",x:600,y:0});
       Q.state.on("change.score",this,"score");
     },
     score: function(score){
-      this.p.label="Cajas: " + score;
+      this.p.label="Distance: " + score + "m";
     }
   });
 
@@ -60,11 +60,17 @@ Q.Sprite.extend("Player",{
       duckingPoints : [ [ -16, 44], [ -23, 35 ], [-23,-10], [23,-10], [23, 35 ], [ 16, 44 ]],
       speed: 500,
       jump: -600,
+      stopped: false,
+      distance: 0,
     });
 
     this.p.points = this.p.standingPoints;
     this.add("2d, animation");
     this.play("walk");
+  },
+
+  stopped: function(){
+    return this.p.stopped;
   },
 
   setShield : function(activated){
@@ -79,7 +85,17 @@ Q.Sprite.extend("Player",{
    // console.log("player: iteracion-> " + itPlayer + " x-> " + this.p.x + " y-> " + this.p.y );
 
     this.p.vx += (this.p.speed - this.p.vx)/4;
-
+    console.log(this.p.distance);
+    if(this.p.speed - this.p.vx < 3 ){
+      this.p.distance += 1;
+      if(this.p.distance == 100){
+        this.p.distance = 0;7
+        Q.state.inc("score", 1);
+        this.p.stopped = false;
+      }
+    }else{
+      this.p.stopped = true;
+    }
 
     if(this.p.vy == 0)
       console.log("aire");
@@ -236,7 +252,6 @@ Q.Sprite.extend("BoxGood",{
   sensor: function(collision) {
     var playerObj = collision.obj;
     if(!this.p.touched && playerObj.isA("Player")){
-      Q.state.inc("score", 1);
       this.p.touched = true; 
       playerObj.play("eat");
       var playerVel = playerObj.p.vx;
@@ -325,7 +340,7 @@ Q.Sprite.extend("BoxFija",{
 
 
 Q.Sprite.extend("Ameba",{
-  init: function(tipo) {
+  init: function(level) {
 
     var levels = [ 573 , 515 , 509 ];
 
@@ -341,6 +356,8 @@ Q.Sprite.extend("Ameba",{
       opacity: 0.4,
       sheet: "ameba",
       sprite: "ameba",
+      timeStart: 0,
+      timeMax: level > 0 ? 5*level : 5,
       vx: player.p.vx,
       vy: player.p.vy,
       ay: player.p.ay,
@@ -356,12 +373,16 @@ Q.Sprite.extend("Ameba",{
 
   step: function(dt) {
 
+    this.p.timeStart += dt;
     this.p.x = this.p.player.p.x;
 
     this.p.vy = this.p.player.p.vy;
     this.p.y = this.p.player.p.y;
     
-    if(this.p.y > 800) { this.destroy(); }
+    if(this.p.timeStart > this.p.timeMax){ 
+      this.p.player.setShield(false); 
+      this.destroy();
+    }
 
   },
 
@@ -435,7 +456,6 @@ Q.Sprite.extend("Escudo",{
   sensor: function(collision) {
     var playerObj = collision.obj;
     if(!this.p.touched && playerObj.isA("Player")){
-      Q.state.inc("score", 1);
       this.p.touched = true;
       if(!playerObj.p.shield){
         this.stage.insert(new Q.Ameba());
@@ -465,6 +485,7 @@ Q.Sprite.extend("Escudo",{
 Q.GameObject.extend("BoxThrower",{
   init: function() {
     this.p = {
+      player: null,
       launchDelay: 0.75,
       launchRandom: 1,
       launch: 2
@@ -472,27 +493,33 @@ Q.GameObject.extend("BoxThrower",{
   },
 
   update: function(dt) {
-    this.p.launch -= dt;
+    if(this.p.player==null)
+      this.p.player=Q("Player").first();
 
-    if(this.p.launch < 0) {
-        
-      if(Math.floor(Math.random()*2)===1){
-        this.stage.insert(new Q.BoxFija("doble"));
-        this.stage.insert(new Q.BoxFija());
-        this.p.launch = this.p.launchDelay + this.p.launchRandom * Math.random();
-      }else{
-        this.stage.insert(new Q.Escudo());
-        this.p.launch = this.p.launchDelay + this.p.launchRandom * Math.random();
+    if(this.p.player && !this.p.player.stopped()){
+      this.p.launch -= dt;
+
+
+      if(this.p.launch < 0 ) {
+          
+        if(Math.floor(Math.random()*2)===1){
+          this.stage.insert(new Q.BoxFija("doble"));
+          this.stage.insert(new Q.BoxFija());
+          this.p.launch = this.p.launchDelay + this.p.launchRandom * Math.random();
+        }else{
+          this.stage.insert(new Q.Escudo());
+          this.p.launch = this.p.launchDelay + this.p.launchRandom * Math.random();
+        }
+          /*
+        }
+        if(Math.floor(Math.random()*2)===1){
+          this.stage.insert(new Q.BoxFija());
+          this.p.launch = this.p.launchDelay + this.p.launchRandom * Math.random();
+        }else{
+          this.stage.insert(new Q.BoxGood());
+          this.p.launch = this.p.launchDelay + this.p.launchRandom * Math.random();   
+        }*/
       }
-        /*
-      }
-      if(Math.floor(Math.random()*2)===1){
-        this.stage.insert(new Q.BoxFija());
-        this.p.launch = this.p.launchDelay + this.p.launchRandom * Math.random();
-      }else{
-        this.stage.insert(new Q.BoxGood());
-        this.p.launch = this.p.launchDelay + this.p.launchRandom * Math.random();   
-      }*/
     }
   }
 
