@@ -94,12 +94,9 @@ Q.Sprite.extend("Player",{
       this.p.shield = true;
     else
       this.p.shield = false;
-
-  }
-  ,
+  },
   step: function(dt) {
-   // console.log("player: iteracion-> " + itPlayer + " x-> " + this.p.x + " y-> " + this.p.y );
-
+   
     this.p.vx += (this.p.speed - this.p.vx)/4;
     console.log(this.p.distance);
     if(this.p.speed - this.p.vx < 3 ){
@@ -175,7 +172,7 @@ Q.component("defaultEnemy", {
   }
 });
 
-Q.Sprite.extend("Box",{
+Q.Sprite.extend("Mina",{
   init: function() {
     var levels = [  540,  450 ];
     //var levels = [ 565, 540, 500, 450 ];
@@ -609,7 +606,7 @@ Q.GameObject.extend("BoxThrower",{
           this.stage.insert(new Q.BoxFija());
           this.p.launch = this.p.launchDelay + this.p.launchRandom * Math.random();
         }else{
-          this.stage.insert(new Q.Coin());
+          this.stage.insert(new Q.Mina());
           this.p.launch = this.p.launchDelay + this.p.launchRandom * Math.random();
         }
           /*
@@ -626,6 +623,29 @@ Q.GameObject.extend("BoxThrower",{
   }
 
 });
+
+
+  Q.scene('endGame',function(stage) {
+    var box = stage.insert(new Q.UI.Container({
+      x: Q.width/2, y: Q.height/2, fill: "rgba(0,0,0,0.5)"
+    }));
+    
+    var buttonPlay = box.insert(new Q.UI.Button({ x: 0, y: 0, fill: "#CCCCCC",
+                                             label: "Play Again" }))  
+    var buttonExit = box.insert(new Q.UI.Button({ x: 0, y: 0, fill: "#CCCCCC",
+                                             label: "Play Again" }))         
+    var label = box.insert(new Q.UI.Text({x:10, y: -10 - button.p.h, 
+                                          label: stage.options.label }));
+    buttonPlay.on("click",function() {
+      Q.audio.stop();
+      Q.clearStages();
+      Q.stageScene('level1');
+    });
+    buttonExit.on("click", function(){
+      Q.clearStages();
+    })
+    box.fit(20);
+  });
 
 
 Q.scene("level1",function(stage) {
