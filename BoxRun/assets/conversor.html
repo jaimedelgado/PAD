@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+  <head>
+     <title>Conversor</title>
+	 <link rel="stylesheet" type="text/css" href="conversor.css" />
+	 <script src="conversor.js"></script>
+	 <script>
+	 	    var conversor = new Conversor(1 / 166.386);
+     </script>
+  </head>
+  <body>
+	<section id="panelConversion">
+	    <div id="etiquetaOrigen">Pesetas</div>
+	    <input type="text" id="cantidadAConvertir" onfocus="conversor.resetea()" />
+		<br />
+       	<div id="etiquetaResultado">Euros</div>
+	    <input type="text" id="cantidadResultante" disabled />
+		<br />
+	    <input type="submit" id="botonConversion" value="convertir" onclick="conversor.convierte()" />
+		<br />
+		<div id="errores"/>
+	</section>	
+
+    <aside id="panelControl"/>
+	   <input type="radio" name="modoConversion" id="PtasAEuros"  checked 
+	        onchange="conversor.fijaConversionPesetasAEuros()" /> 
+	    <label for="PtasAEuros">Pesetas a Euros</label>		
+	   <br />
+	   <input type="radio" name="modoConversion" id="EurosAPtas"
+   	         onchange="conversor.fijaConversionEurosAPesetas()" />
+	    <label for="EurosAPtas">Euros a Ptas</label>		
+	</aside>
+    <div id="error" />
+  </body>
+</html>  
+      
+  

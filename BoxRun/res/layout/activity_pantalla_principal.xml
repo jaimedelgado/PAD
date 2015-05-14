@@ -1,0 +1,77 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/pantalla_principal"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.example.boxrun.Pantalla_principal" >
+	
+    <!--
+         The primary full-screen view. This can be replaced with whatever view
+         is needed to present your content, e.g. VideoView, SurfaceView,
+         TextureView, etc.
+    -->
+
+    <!--
+         This FrameLayout insets its children based on system windows using
+         android:fitsSystemWindows.
+    -->
+
+    <LinearLayout
+        android:id="@+id/linear_layout_pantalla_principal"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        android:background="@drawable/fondoprincipal"
+        android:baselineAligned="false"
+        android:clickable="true"
+        android:contentDescription="@string/Setting_button_description"
+        android:gravity="top"
+        android:orientation="vertical"
+        android:padding="20dp"
+        android:paddingTop="20dp"
+        android:tag="@string/fullscreen_content"
+        android:weightSum="9000" >
+
+        <ImageButton
+            android:id="@+id/imageButton1"
+            android:layout_width="255dp"
+            android:layout_height="45dp"
+            android:layout_gravity="end"
+            android:layout_marginTop="20dp"
+            android:contentDescription="@string/Setting_button_description"
+            android:onClick="ir_a_ajustes"
+            android:src="@drawable/buttonsettings" />
+
+        <ImageButton
+            android:id="@+id/imageButton2"
+            android:layout_width="255dp"
+            android:layout_height="45dp"
+            android:layout_gravity="end"
+             android:onClick="ir_a_tienda"
+            android:layout_marginTop="20dp"
+            android:contentDescription="@string/Market_button_description"
+            android:src="@drawable/buttonmarket" />
+
+        <ImageButton
+            android:id="@+id/imageButton3"
+            android:layout_width="255dp"
+            android:layout_height="45dp"
+            android:layout_gravity="end"
+             android:onClick="ir_a_jugar"
+            android:layout_marginTop="20dp"
+            android:contentDescription="@string/Play_button_description"
+            android:src="@drawable/buttonplay" />
+        
+        <ImageButton
+            android:id="@+id/imageButton4"
+            android:layout_width="255dp"
+            android:layout_height="45dp"
+            android:layout_gravity="end"
+             android:onClick="ir_a_ranking"
+            android:layout_marginTop="20dp"
+            android:contentDescription="@string/Ranking_button_description"
+            android:src="@drawable/buttonranking" />
+
+    </LinearLayout>
+
+</FrameLayout>
