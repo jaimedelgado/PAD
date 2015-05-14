@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Box Run</string>
+    <string name="dummy_button">Dummy Button</string>
+    <string name="dummy_content">DUMMY\nCONTENT</string>
+    <string name="Jugar">JUGAR</string>
+    <string name="Ajustes">AJUSTES</string>
+    <string name="Tienda">TIENDA</string>
+    <string name="fullscreen_content">fullscreen_content</string>
+    <string name="Setting_button_description">setting_button_description</string>
+    <string name="Market_button_description">Market_button_description</string>
+    <string name="Play_button_description">Play_button_description</string>
+    <string name="title_activity_pantalla_ajustes">Pantalla_ajustes</string>
+    <string name="Ajustes_titulo">AJUSTES</string>
+    <string name="Max_puntuacion">Máx.Puntuación</string>
+    <string name="title_activity_tienda">Tienda</string>
+    <string name="Ajustes_volumen">Volumen</string>
+    <string name="Ajustes_max_puntuacion">Máx.Puntuación</string>
+    <string name="Tienda_titulo">TIENDA</string>
+    <string name="Tienda_iman_titulo">Imán</string>
+    <string name="Tienda_fuego_titulo">Llama</string>
+    <string name="Tienda_escudo_titulo">Escudo</string>
+    <string name="Ranking_button_description">Ranking_button_description</string>
+    <string name="title_activity_pantalla_juego">pantalla_juego</string>
+
+</resources>

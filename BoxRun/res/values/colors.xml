@@ -1,0 +1,14 @@
+<resources>
+
+    <color name="Verde_Jugar">#00FF00</color>
+    <color name="black_overlay">#66000000</color>
+    <color name="Amarillo">#FFFF00</color>
+	<color name="Rojo">#FF0000</color>
+	<color name="Negro">#000000</color>
+	<color name="Azul_celeste">#01b8ff</color>
+	<color name="Blanco">#FFFFFF</color>
+	<color name="Plateado">#bca5a550</color>
+	<color name="Morado">#c6b13a45</color>
+	<color name="Azul_oscuro">#000080fa</color>
+
+</resources>
