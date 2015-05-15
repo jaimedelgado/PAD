@@ -14,6 +14,8 @@ var infoNativo = (function(){
 
 window.addEventListener("load",function() {
 
+
+
 var Q = window.Q = Quintus()
         .include("Sprites, Scenes, Input, 2D, Anim, Touch, UI")
         .setup({ width: 683, height: 384, scaleToFit: true })
@@ -21,11 +23,11 @@ var Q = window.Q = Quintus()
 /////////////////////////////////DISTANCIA///////////////////////////////////////////
   Q.UI.Text.extend("Score",{
     init:function(p){
-      this._super({label:"Distance: 0m",x:600,y:0});
+      this._super({label:"Distancia: 0m",x:600,y:0});
       Q.state.on("change.score",this,"score");
     },
     score: function(score){
-      this.p.label="Distance: " + score + "m";
+      this.p.label="Distancia: " + score + "m";
     }
   });
 
@@ -40,7 +42,7 @@ var Q = window.Q = Quintus()
 
   Q.UI.Text.extend("Coins",{
     init:function(p){
-      this._super({label:"Coins: " + infoNativo.coins,x:615,y:30});
+      this._super({ label:"Coins: " + infoNativo.coins,x:615,y:30});
       Q.state.on("change.coins",this,"coins");
     },
     coins: function(coins){
@@ -71,18 +73,24 @@ Q.Sprite.extend("Player",{
       releaseJump: false,
       x: 40,
       shield: false,
-      y: 559,
+      y: 610,
+      scale: 0.8,
       standingPoints: [ [ -16, 44], [ -23, 35 ], [-23,-48], [23,-48], [23, 35 ], [ 16, 44 ]],
       duckingPoints : [ [ -16, 44], [ -23, 35 ], [-23,-10], [23,-10], [23, 35 ], [ 16, 44 ]],
       speed: 500,
-      jump: -600,
+      jump: -550,
       stopped: false,
+      dead: false,
       distance: 0,
     });
 
     this.p.points = this.p.standingPoints;
     this.add("2d, animation");
     this.play("walk");
+  },
+
+  dead: function(){
+    this.p.dead = true;
   },
 
   stopped: function(){
@@ -97,8 +105,9 @@ Q.Sprite.extend("Player",{
   },
   step: function(dt) {
    
+   if(!this.p.dead){
     this.p.vx += (this.p.speed - this.p.vx)/4;
-    console.log(this.p.distance);
+    //console.log(this.p.distance);
     if(this.p.speed - this.p.vx < 3 ){
       this.p.distance += 1;
       if(this.p.distance == 100){
@@ -110,12 +119,12 @@ Q.Sprite.extend("Player",{
       this.p.stopped = true;
     }
 
-    if(this.p.vy == 0)
-      console.log("aire");
+    //if(this.p.vy == 0)
+      //console.log("aire");
 
-    if(this.p.y > 559 || this.p.vy == 0 ) {
-      if(this.p.y > 559)
-        this.p.y = 559; 
+    if(this.p.y > 610 || this.p.vy == 0 ) {
+      if(this.p.y > 610)
+        this.p.y = 610; 
       this.p.landed = 1;
       this.p.vy = 0;
     } else {
@@ -140,13 +149,15 @@ Q.Sprite.extend("Player",{
       this.p.doubleJump = true;
       this.p.releaseJump = false;
       if(Q.inputs['down'] && this.p.animation != "eat") {
-        this.p.w = 98;
         console.log(this);
-        this.play("down");
+        this.p.sprite = "agachado";
+        this.play("agachado");
+        //this.size(true);
         this.p.points = this.p.duckingPoints;
       } else {
+        this.p.sprite = "eater";
         if(this.p.animation != "eat")
-        this.play("walk");
+          this.play("walk");
       }
     } else {
       if(!Q.inputs['up']){
@@ -161,7 +172,7 @@ Q.Sprite.extend("Player",{
     }
 
     this.stage.viewport.centerOn(this.p.x + 175, 500 );
-
+  }
   }
 });
 
@@ -178,13 +189,14 @@ Q.Sprite.extend("Mina",{
     //var levels = [ 565, 540, 500, 450 ];
     var player = Q("Player").first();
     this._super({
+      player : Q("Player").first(),
       x: player.p.x + Q.width + 50,
       y: levels[Math.floor(Math.random() * 3)],
       frame: Math.random() < 0.5 ? 0 : 0,//<------------------
       scale: 1.2,
       type: SPRITE_BOX,
       sheet: "mina",
-      vx: -100 + 200 * Math.random(),
+      vx: 50,
       vy: 0,
       ay: 0,
       theta: (300 * Math.random() + 200) * (Math.random() < 0.5 ? 1 : -1)
@@ -202,10 +214,15 @@ Q.Sprite.extend("Mina",{
     if(this.p.y != 565) {
       this.p.angle += this.p.theta * dt;
     }
-    if(this.p.y > 800) { this.destroy(); }
+    if(this.p.y > 800 || this.p.x < this.p.player.p.x - 200) { console.log("BYE");this.destroy(); }
+
   },
-  hit: function() {
-    if(this.p.type != 0){
+  hit: function(collision) {
+    var player = collision.obj;
+    if(this.p.type != 0 && player.isA("Player")){
+      player.p.vx = 0;
+      player.dead();
+      Q.stageScene("endGame", 1, { label: "Game Over!" });
       this.p.type = 0;
       console.log("colision");
       this.p.collisionMask = Q.SPRITE_NONE;
@@ -289,27 +306,28 @@ Q.Sprite.extend("BoxGood",{
 
 
 Q.Sprite.extend("BoxFija",{
-  init: function(tipo) {
+  init: function(posX, posY) {
 
     var levels = [ 573 , 515 , 509 ];
 
     var player = Q("Player").first();
     this._super({
+      player: Q("Player").first(),
       touched: false,
       x: player.p.x + Q.width + 50,
-      y: tipo == "doble" ? 517  : 573,
+      y: 573 - (50 * posY),
       //frame: Math.random() < 0.5 ? 1 : 0,
-      scale: 0.9,
+      scale: 0.8,
       type: SPRITE_BOX,
       sheet: "cajaBuena",
       vx: 50,
       vy: 0,
       ay: 0,
     });
-
+    this.p.x += this.p.w * this.p.scale * posX;
     this.add("animation, tween");
 
-    this.on("hit", this, "sensor");
+    //this.on("hit", this, "sensor");
 
     //this.add("animation, tween");
   },
@@ -321,7 +339,7 @@ Q.Sprite.extend("BoxFija",{
     this.p.vy += this.p.ay * dt;
     this.p.y += this.p.vy * dt;
     
-    if(this.p.y > 800) { this.destroy(); }
+    if(this.p.y > 800 || this.p.x < this.p.player.p.x - 200) { console.log("BYE");this.destroy(); }
 
   },
 
@@ -364,7 +382,7 @@ Q.Sprite.extend("Ameba",{
       //y: tipo == "doble" ? 515  : 573,
       y: player.p.y,
       //frame: Math.random() < 0.5 ? 1 : 0,
-      scale: 1.3,
+      scale: 1.1,
       type: 0,
       opacity: 0.4,
       sheet: "ameba",
@@ -431,6 +449,8 @@ Q.Sprite.extend("Escudo",{
 
     var player = Q("Player").first();
     this._super({
+
+      player: Q("Player").first(),
       touched: false,
       x: player.p.x + Q.width + 50,
       y: 509,
@@ -465,14 +485,17 @@ Q.Sprite.extend("Escudo",{
 
     this.p.vy += this.p.ay * dt;
     this.p.y += this.p.vy * dt;
-    
-    if(this.p.y > 800) { this.destroy(); }
+
+
+    if(this.p.y > 800 || this.p.x < this.p.player.p.x - 200) { console.log("BYE");this.destroy(); }
+
 
   },
 
   sensor: function(collision) {
     var playerObj = collision.obj;
     if(!this.p.touched && playerObj.isA("Player")){
+      playerObj.play("eat");
       this.p.touched = true;
       if(!playerObj.p.shield){
         this.stage.insert(new Q.Ameba());
@@ -587,7 +610,7 @@ Q.GameObject.extend("BoxThrower",{
       player: null,
       launchDelay: 0.75,
       launchRandom: 1,
-      launch: 2
+      launch: 1
     }
   },
 
@@ -602,8 +625,11 @@ Q.GameObject.extend("BoxThrower",{
       if(this.p.launch < 0 ) {
           
         if(Math.floor(Math.random()*2)===1){
-          this.stage.insert(new Q.BoxFija("doble"));
-          this.stage.insert(new Q.BoxFija());
+          //this.stage.insert(new Q.BoxFija("doble"));
+          this.stage.insert(new Q.Escudo());
+          this.stage.insert(new Q.BoxFija(1,1));
+          this.stage.insert(new Q.BoxFija(2,1));
+          this.stage.insert(new Q.BoxFija(3,1));
           this.p.launch = this.p.launchDelay + this.p.launchRandom * Math.random();
         }else{
           this.stage.insert(new Q.Mina());
@@ -627,19 +653,24 @@ Q.GameObject.extend("BoxThrower",{
 
   Q.scene('endGame',function(stage) {
     var box = stage.insert(new Q.UI.Container({
-      x: Q.width/2, y: Q.height/2, fill: "rgba(0,0,0,0.5)"
+      x: Q.width/2, y: Q.height/2, fill: "rgba(0, 95, 154, 0.5)"
     }));
     
+    var buttonPlay = box.insert(new Q.UI.Button({ x: 0, y: -65, fill: "#CCCCCC",
+                                            fill: "rgba(0, 95, 154, 0)",
+                                             asset: "muerto.png" }))  
+
     var buttonPlay = box.insert(new Q.UI.Button({ x: 0, y: 0, fill: "#CCCCCC",
-                                             label: "Play Again" }))  
-    var buttonExit = box.insert(new Q.UI.Button({ x: 0, y: 0, fill: "#CCCCCC",
-                                             label: "Play Again" }))         
-    var label = box.insert(new Q.UI.Text({x:10, y: -10 - button.p.h, 
+                                             label: "Jugar" }))  
+    var buttonExit = box.insert(new Q.UI.Button({ x: 0, y: 50, fill: "#CCCCCC",
+                                             label: " Salir " }))         
+    var label = box.insert(new Q.UI.Text({x:0, y: -90 - buttonExit.p.h, 
                                           label: stage.options.label }));
     buttonPlay.on("click",function() {
-      Q.audio.stop();
       Q.clearStages();
       Q.stageScene('level1');
+      Q.stageScene("HUD", 1);
+      Q.stageScene("HUDCoins", 2);
     });
     buttonExit.on("click", function(){
       Q.clearStages();
@@ -650,14 +681,17 @@ Q.GameObject.extend("BoxThrower",{
 
 Q.scene("level1",function(stage) {
 
-  stage.insert(new Q.Repeater({ asset: "background-wall.png",
-                                speedX: 0.5 }));
-
+  stage.insert(new Q.Repeater({ asset: "fondo.jpg",
+                                speedX: 0.5,
+                                repeatY: false,
+                                y: 90           
+                                }));
+/*
   stage.insert(new Q.Repeater({ asset: "suelo.png",
                                 repeatY: false,
                                 speedX: 1.0,
-                                y: 300 }));
-
+                                y: 0 }));
+*/
   stage.insert(new Q.BoxThrower());
 
   stage.insert(new Q.Player());
@@ -666,7 +700,7 @@ Q.scene("level1",function(stage) {
 
 });
   
-Q.load("coin.png, coin.json, escudo.png, escudo.json, ameba.png, ameba.json, cajaRota.png, cajaRota.json, mina.png, mina.json, eater.json, eater.png, player.json, player.png, background-wall.png, suelo.png, crates.png, crates.json, cajaBuena.png, cajaBuena.json", function() {
+Q.load("fondo.jpg, snow.png, agachado.png, agachado.json, muerto.png, coin.png, coin.json, escudo.png, escudo.json, ameba.png, ameba.json, cajaRota.png, cajaRota.json, mina.png, mina.json, eater.json, eater.png, player.json, player.png, background-wall.png, crates.png, crates.json, cajaBuena.png, cajaBuena.json", function() {
     Q.compileSheets("player.png","player.json");
     Q.compileSheets("crates.png","crates.json");
     Q.compileSheets("cajaBuena.png","cajaBuena.json");
@@ -676,15 +710,19 @@ Q.load("coin.png, coin.json, escudo.png, escudo.json, ameba.png, ameba.json, caj
     Q.compileSheets("ameba.png", "ameba.json");
     Q.compileSheets("escudo.png", "escudo.json");
     Q.compileSheets("coin.png", "coin.json");
+    Q.compileSheets("agachado.png", "agachado.json");
 
     Q.animations("eater", {
-      walk: { frames: [0,1], rate: 1/4, flip: false, loop: true },
-      eat: { frames: [2,3,4], rate: 1/4, flip: false, next: "walk" },
-      jump_up: { frames: [5] },
-      jump_down: { frames: [6] },
-      down: { frames: [7] },
+      walk: { frames: [0,1,2,1], rate: 1/5, flip: false, loop: true },
+      eat: { frames: [3,4,5], rate: 1/4, flip: false, next: "walk" },
+      jump_up: { frames: [6] },
+      jump_down: { frames: [7] },
+      down: { frames: [8] },
     });
 
+    Q.animations("agachado", {
+      agachado: { frames: [0] },
+    })
     Q.animations("escudo", {
       escudo: { frames: [0] }
     });
@@ -700,8 +738,8 @@ Q.load("coin.png, coin.json, escudo.png, escudo.json, ameba.png, ameba.json, caj
       duck_right: { frames: [15], rate: 1/10, flip: false },
     });
     Q.stageScene("level1");
-    Q.stageScene("HUD", 1);
-    Q.stageScene("HUDCoins", 2);
+    Q.stageScene("HUD", 2);
+    Q.stageScene("HUDCoins", 3);
   
 });
 

@@ -1,4 +1,4 @@
 {
-	"eater":{"sx":0,"sy":0,"cols":7,"tilew":72,"tileh":98,"frames":8},
-	"eater_down":{"sx":0,"cols": 1, "sy":0,"tilew":98,"h":98,"frames":1}
+	"eater":{"sx":0,"sy":0,"cols":8,"tilew":72,"tileh":98,"frames":8},
+	"eater_down":{"sx":0, "sy":98,"tilew":98,"h":98,"frames":1}
 }
