@@ -1,5 +1,5 @@
 
-var DatosNativos = (function(){//Para testear el juego en local sin el WebView
+/*var DatosNativos = (function(){//Para testear el juego en local sin el WebView
   return{
   monedas: function(){
     return 0;
@@ -11,7 +11,7 @@ var DatosNativos = (function(){//Para testear el juego en local sin el WebView
     return 0;
   }
   }
-})();
+})();*/
 
 var infoNativo = (function(){
   var foo = 'Hello World';
