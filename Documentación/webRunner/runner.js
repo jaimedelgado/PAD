@@ -204,7 +204,7 @@ Q.Sprite.extend("Mina",{
     this._super({
       player : Q("Player").first(),
       x: player.p.x + Q.width + 50,
-      y: levels[Math.floor(Math.random() * 3)],
+      y: levels[Math.floor(Math.random() * 2)],
       frame: Math.random() < 0.5 ? 0 : 0,//<------------------
       scale: 1.2,
       type: SPRITE_BOX,
@@ -789,6 +789,27 @@ Q.GameObject.extend("BoxThrower",{
           
   },
 
+  struct3: function(){
+          this.stage.insert(new Q.BoxFija(1,0));
+          this.stage.insert(new Q.BoxFija(2,0));
+          this.stage.insert(new Q.BoxFija(4,2));
+          this.stage.insert(new Q.BoxFija(5,2));
+          this.stage.insert(new Q.BoxFija(6,2));
+          this.stage.insert(new Q.BoxFija(8,4));
+          this.stage.insert(new Q.BoxFija(9,4));
+          this.stage.insert(new Q.Coin(3,0));
+          this.stage.insert(new Q.Coin(4,0));
+          this.stage.insert(new Q.Coin(5,0));
+          this.stage.insert(new Q.Coin(6,0));
+          this.stage.insert(new Q.Coin(7,0));
+          this.stage.insert(new Q.Coin(10,5));
+          this.stage.insert(new Q.Coin(9,5));
+          this.stage.insert(new Q.Coin(11,4));
+          this.stage.insert(new Q.Coin(12,4));
+
+          
+  },
+
   update: function(dt) {
     if(this.p.player==null)
       this.p.player=Q("Player").first();
@@ -801,9 +822,10 @@ Q.GameObject.extend("BoxThrower",{
           
         if(Math.floor(Math.random()*2)===1){
           //this.stage.insert(new Q.BoxFija("doble"));
-          this.struct2();
+          this.struct3();
           this.p.launch = this.p.launchDelay + this.p.launchRandom * Math.random();
         }else{
+          console.log("Mina va");
           this.stage.insert(new Q.Mina());
           this.p.launch = this.p.launchDelay + this.p.launchRandom * Math.random();
         }
