@@ -9,6 +9,9 @@
   },
   nivelFuego: function(){
     return 0;
+  },
+  sumar: function(cantidad){
+    console.log("monedaSumada");
   }
   }
 })();*/
@@ -147,8 +150,6 @@ Q.Sprite.extend("Player",{
       this.p.stopped = true;
     }
 
-    //if(this.p.vy == 0)
-      //console.log("aire");
 
     if(this.p.y > 610 || this.p.vy == 0 ) {
       if(this.p.y > 610)
@@ -158,13 +159,6 @@ Q.Sprite.extend("Player",{
     } else {
       this.p.landed = 0;
     }
-    /*
-    if(this.p.sprite == "agachado"){
-
-        this.p.nivelAgachado = this.p.y;
-        this.p.y = this.p.nivelAgachado + 25;
-
-    }*/
 
     if(this.p.doubleJump && this.p.releaseJump){
       if(Q.inputs['up']){
@@ -250,7 +244,7 @@ Q.Sprite.extend("Mina",{
     if(this.p.y != 565) {
       this.p.angle += this.p.theta * dt;
     }
-    if(this.p.y > 800 || this.p.x < this.p.player.p.x - 200) { console.log("BYE");this.destroy(); }
+    if(this.p.y > 800 || this.p.x < this.p.player.p.x - 200) {this.destroy(); }
 
   },
   hit: function(collision) {
@@ -271,7 +265,6 @@ Q.Sprite.extend("Mina",{
       player.dead();
       Q.stageScene("endGame", 1, { label: "Game Over!" });
       this.p.type = 0;
-      console.log("colision");
       this.p.collisionMask = Q.SPRITE_NONE;
 
       this.p.opacity = 0.5;
@@ -336,17 +329,7 @@ Q.Sprite.extend("BoxGood",{
       var playerVel = playerObj.p.vx;
       //console.log("caja: x-> " + this.p.x + " y-> " + this.p.y + " |  Pj: x-> " + collision.obj.p.x + " y-> " + collision.obj.p.y);
       this.animate({y: playerObj.p.y, vx: playerVel + playerVel/1.5, opacity: 0, scale: 0.1}, 1/5, {callback: function(){this.destroy();}});
-    }else{
     }
-
-     /*  
-    this.p.type = 0;
-    this.p.collisionMask = Q.SPRITE_NONE;
-    this.p.vx = 200;
-    this.p.ay = 400;
-    this.p.vy = -300;
-    this.p.opacity = 1;
-  */
   }
   
 
@@ -388,7 +371,7 @@ Q.Sprite.extend("BoxFija",{
     this.p.vy += this.p.ay * dt;
     this.p.y += this.p.vy * dt;
     
-    if(this.p.y > 800 || this.p.x < this.p.player.p.x - 200) { console.log("BYE");this.destroy(); }
+    if(this.p.y > 800 || this.p.x < this.p.player.p.x - 200) { this.destroy(); }
 
   },
 
@@ -463,26 +446,7 @@ Q.Sprite.extend("Ameba",{
     if(collision.obj.isA("Mina")){
       collision.obj.p.type = 0;
       collision.obj.p.opacity = 0.5;
-  }
-    /*var playerObj = collision.obj;
-    if(!this.p.touched && playerObj.isA("Player")){
-      Q.state.inc("score", 1);
-      this.p.touched = true; 
-      playerObj.play("eat");
-      var playerVel = playerObj.p.vx;
-      //console.log("caja: x-> " + this.p.x + " y-> " + this.p.y + " |  Pj: x-> " + collision.obj.p.x + " y-> " + collision.obj.p.y);
-      this.animate({y: playerObj.p.y, vx: playerVel + playerVel/2, opacity: 0, scale: 0.1}, 1/5, {callback: function(){this.destroy();}});
-    }else{
     }
-
-      
-    this.p.type = 0;
-    this.p.collisionMask = Q.SPRITE_NONE;
-    this.p.vx = 200;
-    this.p.ay = 400;
-    this.p.vy = -300;
-    this.p.opacity = 1;
-  */
   }
   
 
@@ -533,7 +497,7 @@ Q.Sprite.extend("Escudo",{
     this.p.y += this.p.vy * dt;
 
 
-    if(this.p.y > 800 || this.p.x < this.p.player.p.x - 200) { console.log("BYE");this.destroy(); }
+    if(this.p.y > 800 || this.p.x < this.p.player.p.x - 200) { this.destroy(); }
 
 
   },
@@ -553,15 +517,6 @@ Q.Sprite.extend("Escudo",{
       this.animate({y: this.p.y - 30}, 1/5, {callback: function(){this.destroy();}});
     }else{
     }
-
-      /*
-    this.p.type = 0;
-    this.p.collisionMask = Q.SPRITE_NONE;
-    this.p.vx = 200;
-    this.p.ay = 400;
-    this.p.vy = -300;
-    this.p.opacity = 1;
-  */
   }
   
 
@@ -614,7 +569,7 @@ Q.Sprite.extend("FuegoIcon",{
     this.p.y += this.p.vy * dt;
 
 
-    if(this.p.y > 800 || this.p.x < this.p.player.p.x - 200) { console.log("BYE");this.destroy(); }
+    if(this.p.y > 800 || this.p.x < this.p.player.p.x - 200) { this.destroy(); }
 
 
   },
@@ -640,15 +595,11 @@ Q.Sprite.extend("FuegoIcon",{
 Q.Sprite.extend("Fuego",{
   init: function(level) {
 
-    var levels = [ 573 , 515 , 509 ];
-
     var player = Q("Player").first();
     this._super({
       player: Q("Player").first(),
       x: player.p.x,
-      //y: tipo == "doble" ? 515  : 573,
       y: player.p.y - 20,
-      //frame: Math.random() < 0.5 ? 1 : 0,
       scale: 1.1,
       type: 0,
       opacity: 0.6,
@@ -685,25 +636,7 @@ Q.Sprite.extend("Fuego",{
   },
 
   sensor: function(collision) {
-    /*var playerObj = collision.obj;
-    if(!this.p.touched && playerObj.isA("Player")){
-      Q.state.inc("score", 1);
-      this.p.touched = true; 
-      playerObj.play("eat");
-      var playerVel = playerObj.p.vx;
-      //console.log("caja: x-> " + this.p.x + " y-> " + this.p.y + " |  Pj: x-> " + collision.obj.p.x + " y-> " + collision.obj.p.y);
-      this.animate({y: playerObj.p.y, vx: playerVel + playerVel/2, opacity: 0, scale: 0.1}, 1/5, {callback: function(){this.destroy();}});
-    }else{
-    }
-
-      
-    this.p.type = 0;
-    this.p.collisionMask = Q.SPRITE_NONE;
-    this.p.vx = 200;
-    this.p.ay = 400;
-    this.p.vy = -300;
-    this.p.opacity = 1;
-  */
+    
   }
   
 
@@ -771,21 +704,10 @@ Q.Sprite.extend("Coin",{
     if(!this.p.touched && playerObj.isA("Player")){
       this.p.touched = true;
 
-      
+      DatosNativos.sumar(1);
       Q.state.inc("coins", 1);
-      //console.log("caja: x-> " + this.p.x + " y-> " + this.p.y + " |  Pj: x-> " + collision.obj.p.x + " y-> " + collision.obj.p.y);
       this.animate({y: this.p.y - 30}, 1/5, {callback: function(){this.destroy();}});
-    }else{
     }
-
-      /*
-    this.p.type = 0;
-    this.p.collisionMask = Q.SPRITE_NONE;
-    this.p.vx = 200;
-    this.p.ay = 400;
-    this.p.vy = -300;
-    this.p.opacity = 1;
-  */
   }
   
 
@@ -807,7 +729,6 @@ Q.GameObject.extend("BoxThrower",{
 
   struct1: function(){
 
-          //this.stage.insert(new Q.FuegoIcon());
           this.stage.insert(new Q.BoxFija(1,0));
           this.stage.insert(new Q.Coin(2,0));
           this.stage.insert(new Q.BoxFija(2,1));
@@ -862,7 +783,6 @@ Q.GameObject.extend("BoxThrower",{
 
       if(this.p.launch < 0 ) {
 
-        console.log(this.p.player.p.distance);
       if(this.p.player.p.distance > 1000)
           this.stage.insert(new Q.Mina());
 
@@ -874,13 +794,11 @@ Q.GameObject.extend("BoxThrower",{
         
         }else
         if(struct===0){
-          //this.stage.insert(new Q.BoxFija("doble"));
           this.struct3();
           this.stage.insert(new Q.Mina());
           this.p.launch = this.p.launchDelay + this.p.launchRandom * Math.random();
         }else if(struct===1){
           this.struct1();
-          console.log("Mina va");
           this.stage.insert(new Q.Mina());
           this.p.launch = this.p.launchDelay + this.p.launchRandom * Math.random();
         }else if(struct===2){
@@ -930,16 +848,9 @@ Q.scene("level1",function(stage) {
                                 repeatY: false,
                                 y: 90           
                                 }));
-/*
-  stage.insert(new Q.Repeater({ asset: "suelo.png",
-                                repeatY: false,
-                                speedX: 1.0,
-                                y: 0 }));
-*/
   stage.insert(new Q.BoxThrower());
 
   stage.insert(new Q.Player());
-  //stage.insert(new Q.Ameba());
   stage.add("viewport");
 
 });
