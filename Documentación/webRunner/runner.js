@@ -1,16 +1,30 @@
+
+var DatosNativos = (function(){//Para testear el juego en local sin el WebView
+  return{
+  monedas: function(){
+    return 0;
+  },
+  nivelEscudo: function(){
+    return 0;
+  },
+  nivelFuego: function(){
+    return 0;
+  }
+  }
+})();
+
 var infoNativo = (function(){
   var foo = 'Hello World';
   var idCaja = 1;
 
   return{
-    coins : 151,
-    contCaja : idCaja,
-    incrementCaja : function(){
-      idCaja = idCaja + 1;
-    }
+    numMonedas : DatosNativos.monedas() > 0 ? DatosNativos.monedas() : 0,
+    nivelEscudo: DatosNativos.nivelEscudo() > 0 ? DatosNativos.nivelEscudo() : 0,
+    nivelFuego: DatosNativos.nivelFuego() > 0 ? DatosNativos.nivelFuego() : 0
   }
 
 })();
+
 
 window.addEventListener("load",function() {
 
@@ -53,7 +67,7 @@ var Q = window.Q = Quintus()
       x:0,y:0
     }));
     var label= container.insert(new Q.Coins());
-    Q.state.set("coins",infoNativo.coins);
+    Q.state.set("coins",infoNativo.numMonedas);
   });
 var SPRITE_BOX = 1;
 var SPRITE_MINA = 2;
@@ -82,6 +96,7 @@ Q.Sprite.extend("Player",{
       stopped: false,
       dead: false,
       distance: 0,
+      ameba: 0,
       nivelAgachado: 0
     });
 
@@ -93,6 +108,11 @@ Q.Sprite.extend("Player",{
   dead: function(){
     this.p.dead = true;
   },
+
+  setAmeba: function(amebaObj){
+    this.p.ameba = amebaObj;
+  },
+
 
   setFire: function(activated){
      if(activated)
@@ -201,13 +221,13 @@ Q.Sprite.extend("Player",{
 
 Q.Sprite.extend("Mina",{
   init: function() {
-    var levels = [  540,  450 ];
+    var levels = [  540,  450, 610 ];
     //var levels = [ 565, 540, 500, 450 ];
     var player = Q("Player").first();
     this._super({
       player : Q("Player").first(),
       x: player.p.x + Q.width + 50,
-      y: levels[Math.floor(Math.random() * 2)],
+      y: levels[Math.floor(Math.random() * 3)],
       frame: Math.random() < 0.5 ? 0 : 0,//<------------------
       scale: 1.2,
       type: SPRITE_BOX,
@@ -235,12 +255,17 @@ Q.Sprite.extend("Mina",{
   },
   hit: function(collision) {
     var player = collision.obj;
-    if(this.p.type != 0 && player.isA("Player") && (player.p.onFire || player.p.shield)){
+    if(this.p.type != 0 && player.isA("Player") && (player.p.onFire)){
       this.p.type = 0;
       player.play("eat");
       var playerVel = player.p.vx;
       //console.log("caja: x-> " + this.p.x + " y-> " + this.p.y + " |  Pj: x-> " + collision.obj.p.x + " y-> " + collision.obj.p.y);
       this.animate({y: player.p.y, vx: playerVel + playerVel/1.5, opacity: 0, scale: 0.1}, 1/5, {callback: function(){this.destroy();}});
+    }else if(this.p.type != 0 && player.isA("Player") && (player.p.shield)){
+      this.p.type = 0;
+      this.p.opacity = 0.5;
+      player.p.ameba.hitted();
+
     }else if(this.p.type != 0 && player.isA("Player")){
       player.p.vx = 0;
       player.dead();
@@ -411,7 +436,13 @@ Q.Sprite.extend("Ameba",{
 
     this.on("hit", this, "sensor");
 
-    },
+  },
+    
+  hitted: function(){
+      this.p.player.setShield(false);
+      this.animate({scale: 0.3, opacity: 0.1}, 1/3, {callback: function(){this.destroy();}});
+  },
+
 
   step: function(dt) {
 
@@ -429,6 +460,10 @@ Q.Sprite.extend("Ameba",{
   },
 
   sensor: function(collision) {
+    if(collision.obj.isA("Mina")){
+      collision.obj.p.type = 0;
+      collision.obj.p.opacity = 0.5;
+  }
     /*var playerObj = collision.obj;
     if(!this.p.touched && playerObj.isA("Player")){
       Q.state.inc("score", 1);
@@ -509,8 +544,10 @@ Q.Sprite.extend("Escudo",{
       playerObj.play("eat");
       this.p.touched = true;
       if(!playerObj.p.shield){
-        this.stage.insert(new Q.Ameba());
+        var ameba = new Q.Ameba(infoNativo.nivelEscudo);
+        this.stage.insert(ameba);
         playerObj.setShield(true);
+        playerObj.setAmeba(ameba);
       }
       //console.log("caja: x-> " + this.p.x + " y-> " + this.p.y + " |  Pj: x-> " + collision.obj.p.x + " y-> " + collision.obj.p.y);
       this.animate({y: this.p.y - 30}, 1/5, {callback: function(){this.destroy();}});
@@ -588,7 +625,7 @@ Q.Sprite.extend("FuegoIcon",{
       playerObj.play("eat");
       this.p.touched = true;
       if(!playerObj.p.onFire){
-        this.stage.insert(new Q.Fuego());
+        this.stage.insert(new Q.Fuego(infoNativo.nivelFuego));
         playerObj.setFire(true);
       }
       this.animate({y: this.p.y - 30}, 1/5, {callback: function(){this.destroy();}});
@@ -820,11 +857,18 @@ Q.GameObject.extend("BoxThrower",{
     if(this.p.player && !this.p.player.stopped()){
       this.p.launch -= dt;
 
-      var powerUp = Math.floor(Math.random()*10);
+
+      var powerUp = Math.floor(Math.random()*3);
 
       if(this.p.launch < 0 ) {
+
+        console.log(this.p.player.p.distance);
+      if(this.p.player.p.distance > 1000)
+          this.stage.insert(new Q.Mina());
+
           var struct = Math.floor(Math.random()*3);
         if(powerUp===0){
+          this.stage.insert(new Q.Mina());
           Math.floor(Math.random()*2)==0 ? this.stage.insert(new Q.FuegoIcon()) : this.stage.insert(new Q.Escudo());
           this.p.launch = this.p.launchDelay + this.p.launchRandom * Math.random();
         
@@ -832,6 +876,7 @@ Q.GameObject.extend("BoxThrower",{
         if(struct===0){
           //this.stage.insert(new Q.BoxFija("doble"));
           this.struct3();
+          this.stage.insert(new Q.Mina());
           this.p.launch = this.p.launchDelay + this.p.launchRandom * Math.random();
         }else if(struct===1){
           this.struct1();
@@ -840,6 +885,7 @@ Q.GameObject.extend("BoxThrower",{
           this.p.launch = this.p.launchDelay + this.p.launchRandom * Math.random();
         }else if(struct===2){
           this.struct2();
+          this.stage.insert(new Q.Mina());
           this.p.launch = this.p.launchDelay + this.p.launchRandom * Math.random();
         }
       }
