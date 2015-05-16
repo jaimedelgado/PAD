@@ -138,12 +138,13 @@ Q.Sprite.extend("Player",{
     } else {
       this.p.landed = 0;
     }
+    /*
     if(this.p.sprite == "agachado"){
 
         this.p.nivelAgachado = this.p.y;
         this.p.y = this.p.nivelAgachado + 25;
 
-    }
+    }*/
 
     if(this.p.doubleJump && this.p.releaseJump){
       if(Q.inputs['up']){
@@ -166,6 +167,7 @@ Q.Sprite.extend("Player",{
 
         this.p.sheet = "agachado";
         this.p.sprite = "agachado";
+        this.size(true);
         this.play("agachado");
         //this.size(true);
         this.p.points = this.p.duckingPoints;
@@ -173,6 +175,7 @@ Q.Sprite.extend("Player",{
         if(this.p.sheet == "agachado"){
           this.p.sheet = "eater";
           this.p.sprite = "eater";
+          this.size(true);
         }
        // this.p.sprite = "eater";
         if(this.p.animation != "eat")
@@ -817,27 +820,28 @@ Q.GameObject.extend("BoxThrower",{
     if(this.p.player && !this.p.player.stopped()){
       this.p.launch -= dt;
 
+      var powerUp = Math.floor(Math.random()*10);
 
       if(this.p.launch < 0 ) {
-          
-        if(Math.floor(Math.random()*2)===1){
+          var struct = Math.floor(Math.random()*3);
+        if(powerUp===0){
+          Math.floor(Math.random()*2)==0 ? this.stage.insert(new Q.FuegoIcon()) : this.stage.insert(new Q.Escudo());
+          this.p.launch = this.p.launchDelay + this.p.launchRandom * Math.random();
+        
+        }else
+        if(struct===0){
           //this.stage.insert(new Q.BoxFija("doble"));
           this.struct3();
           this.p.launch = this.p.launchDelay + this.p.launchRandom * Math.random();
-        }else{
+        }else if(struct===1){
+          this.struct1();
           console.log("Mina va");
           this.stage.insert(new Q.Mina());
           this.p.launch = this.p.launchDelay + this.p.launchRandom * Math.random();
-        }
-          /*
-        }
-        if(Math.floor(Math.random()*2)===1){
-          this.stage.insert(new Q.BoxFija());
+        }else if(struct===2){
+          this.struct2();
           this.p.launch = this.p.launchDelay + this.p.launchRandom * Math.random();
-        }else{
-          this.stage.insert(new Q.BoxGood());
-          this.p.launch = this.p.launchDelay + this.p.launchRandom * Math.random();   
-        }*/
+        }
       }
     }
   }
