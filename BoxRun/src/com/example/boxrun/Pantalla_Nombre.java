@@ -177,6 +177,7 @@ public class Pantalla_Nombre extends Activity {
 	        //Generate XML
 	        Source source = new DOMSource(document);
 	        //Indicamos donde lo queremos almacenar
+	        
 	        Result result = new StreamResult(new OutputStreamWriter(
  		            openFileOutput("Configuracion.xml", Context.MODE_PRIVATE))); //nombre del archivo
 	 

@@ -1,5 +1,6 @@
 package com.example.boxrun;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
@@ -19,6 +20,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.view.MotionEvent;
 import android.view.View;
@@ -75,7 +77,9 @@ public class Pantalla_ajustes extends Activity {
 		DocumentBuilder db;		
 		try {
 			db = dbf.newDocumentBuilder();
-			Document doc = db.parse(openFileInput("Configuracion.txt"));
+			File datos = Environment.getDataDirectory();
+	        File c = new File(getFilesDir().getAbsolutePath() + "/Configuracion.xml");   
+			Document doc = db.parse(c);
 			Element raiz = doc.getDocumentElement();
 
 		    //Obtener la lista de nodos que tienen etiqueta "EMPLEADO"
@@ -102,7 +106,9 @@ public class Pantalla_ajustes extends Activity {
 		DocumentBuilder db;		
 		try {
 			db = dbf.newDocumentBuilder();
-			Document doc = db.parse(openFileInput("Configuracion.txt"));
+			File datos = Environment.getDataDirectory();
+	        File c = new File(getFilesDir().getAbsolutePath() + "/Configuracion.xml");   
+			Document doc = db.parse(c);
 			Element raiz = doc.getDocumentElement();
 
 		    //Obtener la lista de nodos que tienen etiqueta "EMPLEADO"

@@ -1,7 +1,10 @@
 package com.example.boxrun;
 
+import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.concurrent.Semaphore;
 
@@ -17,6 +20,7 @@ import org.xml.sax.SAXException;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.os.Environment;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.TextView;
@@ -62,16 +66,79 @@ public class Pantalla_Ranking extends Activity {
 	 * The instance of the {@link SystemUiHider} for this activity.
 	 */
 	private SystemUiHider mSystemUiHider;
-	private String peticion="";
 	
-	public Semaphore semaforo = new Semaphore(0);
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_pantalla_ranking);
-		ArrayList<Jugador> jugadores = jugadores();
-		
-		this.inicializaVistaJugador(jugadores, R.id.Nombre_ranking1, R.id.Puntuacion_ranking1, R.id.puesto1);
+		//ArrayList<Jugador> jugadores = jugadores();
+	
+	    RequestQueue queue = Volley.newRequestQueue(this);
+	   /* try {
+			semaforo.acquire();
+		} catch (InterruptedException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}*/
+	    String url ="http://sesat.fdi.ucm.es:8080/BoxRunService/rest/BoxRunService/ranking";
+	    StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
+		        new Response.Listener<String>() {
+		            @Override
+		            public void onResponse(String response) {
+		            	ArrayList<Jugador> jugadores = new ArrayList<Jugador>();
+		        		String peticion=response;
+		            	String nombre="nombre";
+		        		int puntuacion = 0;
+		        		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+		        		DocumentBuilder db;		
+		        		try {
+		        			File datos = Environment.getDataDirectory();
+		        	        File f = new File(getFilesDir().getAbsolutePath() + "/Ranking.xml");  
+		        	        FileWriter fw = new FileWriter(f);
+		        	        PrintWriter pw = new PrintWriter(fw);
+		        	        pw.write(response);
+		        	        pw.close();
+		        	        fw.close();
+		        			db = dbf.newDocumentBuilder();
+		        			Document doc = db.parse(openFileInput("Ranking.xml"));
+		        			//Document doc = db.parse(peticion);
+		        			Element raiz = doc.getDocumentElement();
+
+		        		    //Obtener la lista de nodos que tienen etiqueta "EMPLEADO"
+		        			NodeList listaJugadores = raiz.getElementsByTagName("jugador");
+		        			for(int i=0; i<listaJugadores.getLength(); i++){
+		        			    Node jugador = listaJugadores.item(i);
+		        			    nombre = jugador.getAttributes().getNamedItem("nombre").getNodeValue();
+		        			    puntuacion = Integer.parseInt(jugador.getAttributes().getNamedItem("maxPuntuacion").getNodeValue());
+		        			    jugadores.add(new Jugador(nombre, puntuacion));
+		        			}
+		        		} catch (FileNotFoundException e) {
+		        			// TODO Auto-generated catch block
+		        			e.printStackTrace();
+		        		} catch (SAXException e) {
+		        			// TODO Auto-generated catch block
+		        			e.printStackTrace();
+		        		} catch (IOException e) {
+		        			// TODO Auto-generated catch block
+		        			e.printStackTrace();
+		        		}catch (ParserConfigurationException e1) {
+		        			// TODO Auto-generated catch block
+		        			e1.printStackTrace();
+		        		}
+		        		inicializaVistaJugador(jugadores, R.id.Nombre_ranking1, R.id.Puntuacion_ranking1, R.id.puesto1);
+		        		inicializaVistaJugador(jugadores, R.id.Nombre_ranking1, R.id.Puntuacion_ranking1, R.id.puesto1);
+		            }
+		        }, new Response.ErrorListener() {
+					@Override
+					public void onErrorResponse(
+							com.android.volley.VolleyError arg0) {
+						// TODO Auto-generated method stub
+						
+					}
+		        });
+	/*	// Add the request to the RequestQueue.
+		queue.add(stringRequest);
+		*/
 	
 		
 		
@@ -89,15 +156,11 @@ public class Pantalla_Ranking extends Activity {
 			layout1.setVisibility(View.GONE);
 		}
 	}
-	public ArrayList<Jugador> jugadores(){
+	/*public ArrayList<Jugador> jugadores(){
 		ArrayList<Jugador> jugadores = new ArrayList<Jugador>();
-		
+		peticion="";
 		peticionRanking();
-		this.semaforo.release();
-	
-		//this.semaforo.release();//para poder volver a usarlo otra vez.
-		//aquí esperamos hasta que el semaforo quede libre
-		//if(this.semaforo.wait())//voy a mirar como lo hice en una práctica un moment
+		
 		String nombre="nombre";
 		int puntuacion = 0;
 		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
@@ -130,20 +193,18 @@ public class Pantalla_Ranking extends Activity {
 			e1.printStackTrace();
 		}
 		return jugadores;
-	}
+	}*/
 
-	public void peticionRanking(){
-
-	    //Añadir la librería volley (la he subido al github) y una vez añadida tiene que estar disponible
-	    //en tiempo de ejecución (Properties -> Java Build Path -> Order and export -> Marcar el 
-	    //tick de la lib volley) Me daba problemas por eso...
+	/*public ArrayList<Jugador> peticionRanking(){
+		ArrayList<Jugador> jugadores = new ArrayList<Jugador>();
+		String peticion="";
 	    RequestQueue queue = Volley.newRequestQueue(this);
-	   /* try {
+	    try {
 			semaforo.acquire();
 		} catch (InterruptedException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
-		}*/
+		}
 	    String url ="http://sesat.fdi.ucm.es:8080/BoxRunService/rest/BoxRunService/ranking";
 	    StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
 		        new Response.Listener<String>() {
@@ -152,14 +213,38 @@ public class Pantalla_Ranking extends Activity {
 		                // Display the first 500 characters of the response string.
 		            	
 		            	peticion = response; 
-		            	try {
-							semaforo.acquire();
-						} catch (InterruptedException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						}
-		                System.out.println("Response is: "+ response); //Ya ha hecho la petición, es asíncrono. response tiene el xml, una vez se ha hecho la petición // cuando se ha realizado la petición
-		                // "response" toma el valor del xml que hay que parsear.
+		            	String nombre="nombre";
+		        		int puntuacion = 0;
+		        		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+		        		DocumentBuilder db;		
+		        		try {
+		        			db = dbf.newDocumentBuilder();
+		        			//Document doc = db.parse(openFileInput("Configuracion.txt"));
+		        			Document doc = db.parse(peticion);
+		        			Element raiz = doc.getDocumentElement();
+
+		        		    //Obtener la lista de nodos que tienen etiqueta "EMPLEADO"
+		        			NodeList listaJugadores = raiz.getElementsByTagName("jugador");
+		        			for(int i=0; i<listaJugadores.getLength(); i++){
+		        			    Node jugador = listaJugadores.item(i);
+		        			    nombre = jugador.getAttributes().getNamedItem("nombre").getNodeValue();
+		        			    puntuacion = Integer.parseInt(jugador.getAttributes().getNamedItem("maxPuntuacion").getNodeValue());
+		        			    jugadores.add(new Jugador(nombre, puntuacion));
+		        			}
+		        		} catch (FileNotFoundException e) {
+		        			// TODO Auto-generated catch block
+		        			e.printStackTrace();
+		        		} catch (SAXException e) {
+		        			// TODO Auto-generated catch block
+		        			e.printStackTrace();
+		        		} catch (IOException e) {
+		        			// TODO Auto-generated catch block
+		        			e.printStackTrace();
+		        		}catch (ParserConfigurationException e1) {
+		        			// TODO Auto-generated catch block
+		        			e1.printStackTrace();
+		        		}
+		        		return jugadores;
 		                
 		            }
 		        }, new Response.ErrorListener() {
@@ -173,6 +258,6 @@ public class Pantalla_Ranking extends Activity {
 		// Add the request to the RequestQueue.
 		queue.add(stringRequest);
 	
-	}
+	}*/
 	
 }

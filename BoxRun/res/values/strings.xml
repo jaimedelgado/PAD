@@ -25,5 +25,6 @@
     <string name="title_activity_pantalla_juego">pantalla_juego</string>
     <string name="title_activity_pantalla__nombre">Pantalla_Nombre</string>
     <string name="title_activity_fullscreen">FullscreenActivity</string>
+    <string name="BoxRun">Box Run</string>
 
 </resources>

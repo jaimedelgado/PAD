@@ -2,7 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/fondo_ajustes"
+    android:background="@drawable/nubes"
     android:padding="3dp"
     tools:context="com.example.boxrun.Pantalla_tienda" >
 
@@ -130,7 +130,9 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginLeft="10dp"
-                                android:layout_marginRight="10dp" />
+                                android:layout_marginRight="10dp"
+                                android:clickable="false" />
+
                         </LinearLayout>
 
                         <LinearLayout
@@ -229,7 +231,9 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginLeft="10dp"
-                                android:layout_marginRight="10dp" />
+                                android:layout_marginRight="10dp"
+                                android:clickable="false" />
+
                         </LinearLayout>
 
                         <LinearLayout

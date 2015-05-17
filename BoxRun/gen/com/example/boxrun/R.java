@@ -36,19 +36,18 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
         public static final int buttonplay=0x7f020002;
         public static final int buttonranking=0x7f020003;
         public static final int buttonsettings=0x7f020004;
-        public static final int fondo_ajustes=0x7f020005;
-        public static final int fondoprincipal=0x7f020006;
-        public static final int ic_launcher=0x7f020007;
-        public static final int medallabronce=0x7f020008;
-        public static final int medallaoro=0x7f020009;
-        public static final int medallaplata=0x7f02000a;
-        public static final int moneda=0x7f02000b;
-        public static final int nubes=0x7f02000c;
-        public static final int play=0x7f02000d;
-        public static final int setting=0x7f02000e;
-        public static final int tienda_icono_escudo=0x7f02000f;
-        public static final int tienda_icono_fuego=0x7f020010;
-        public static final int tienda_icono_iman=0x7f020011;
+        public static final int fondoprincipal=0x7f020005;
+        public static final int ic_launcher=0x7f020006;
+        public static final int medallabronce=0x7f020007;
+        public static final int medallaoro=0x7f020008;
+        public static final int medallaplata=0x7f020009;
+        public static final int moneda=0x7f02000a;
+        public static final int nubes=0x7f02000b;
+        public static final int play=0x7f02000c;
+        public static final int setting=0x7f02000d;
+        public static final int tienda_icono_escudo=0x7f02000e;
+        public static final int tienda_icono_fuego=0x7f02000f;
+        public static final int tienda_icono_iman=0x7f020010;
     }
     public static final class id {
         public static final int ImageView01=0x7f070011;
@@ -126,6 +125,7 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
         public static final int Ajustes_max_puntuacion=0x7f05000f;
         public static final int Ajustes_titulo=0x7f05000b;
         public static final int Ajustes_volumen=0x7f05000e;
+        public static final int BoxRun=0x7f050018;
         public static final int Jugar=0x7f050003;
         public static final int Market_button_description=0x7f050008;
         public static final int Max_puntuacion=0x7f05000c;
