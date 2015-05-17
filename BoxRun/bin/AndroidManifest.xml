@@ -17,7 +17,12 @@
         android:screenOrientation="landscape" >
 
         <!-- android:theme="@style/AppTheme" > -->
-        <activity android:name=".Pantalla_Nombre" android:configChanges="orientation|keyboardHidden|screenSize" android:label="@string/title_activity_pantalla__nombre" android:theme="@android:style/Theme.NoTitleBar" android:screenOrientation="landscape">
+        <activity
+            android:name=".Pantalla_Nombre"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:label="@string/title_activity_pantalla__nombre"
+            android:screenOrientation="landscape"
+            android:theme="@android:style/Theme.NoTitleBar.Fullscreen"> >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -28,32 +33,32 @@
             android:name=".Pantalla_principal"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/app_name"
-            android:theme="@android:style/Theme.NoTitleBar"
-            android:screenOrientation="landscape">
+            android:screenOrientation="landscape"
+           android:theme="@android:style/Theme.NoTitleBar.Fullscreen"> >
         </activity>
         <activity
             android:name=".Pantalla_ajustes"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/title_activity_pantalla_ajustes"
-           android:theme="@android:style/Theme.NoTitleBar"
-            android:screenOrientation="landscape">
+            android:screenOrientation="landscape"
+           android:theme="@android:style/Theme.NoTitleBar.Fullscreen"> >
         </activity>
         <activity
             android:name=".Pantalla_tienda"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/title_activity_tienda"
-            android:theme="@android:style/Theme.NoTitleBar"
-            android:screenOrientation="landscape">
+            android:screenOrientation="landscape"
+            android:theme="@android:style/Theme.NoTitleBar.Fullscreen"> >
         </activity>
 -->
         <activity
             android:name=".Pantalla_juego"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/title_activity_pantalla_juego"
-            android:theme="@android:style/Theme.NoTitleBar"
-            android:screenOrientation="landscape">
+            android:screenOrientation="landscape"
+            android:theme="@android:style/Theme.NoTitleBar.Fullscreen"> >
         </activity>
-        
+        <activity android:name="Pantalla_Ranking"></activity>
     </application>
 
 </manifest>

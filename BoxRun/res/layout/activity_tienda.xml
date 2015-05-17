@@ -30,7 +30,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="543dp"
-                android:background="@color/Azul_oscuro"
+                android:background="@drawable/nubes"
                 android:orientation="vertical" >
 
                 <LinearLayout

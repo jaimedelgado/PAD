@@ -1,0 +1,524 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/nubes"
+    tools:context="com.example.boxrun.Pantalla_Ranking" >
+
+
+
+    <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical" >
+
+            <TextView
+                android:id="@+id/textView2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical|center_horizontal"
+                android:layout_margin="10dp"
+                android:text="RANKING"
+                android:textAppearance="?android:attr/textAppearanceLarge" />
+
+            <ScrollView
+                android:id="@+id/scrollView1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" >
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical" >
+
+                    <FrameLayout
+                        android:id="@+id/puesto1"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="5dp"
+                        android:layout_marginLeft="20dp"
+                        android:layout_marginRight="20dp"
+                        android:layout_marginTop="5dp"
+                        android:background="@color/black_overlay"
+                        android:visibility="visible" >
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_marginRight="10dp" >
+
+                            <ImageView
+                                android:id="@+id/ImageView01"
+                                android:layout_width="50dp"
+                                android:layout_height="50dp"
+                                android:layout_gravity="center_vertical|center_horizontal"
+                                android:layout_marginBottom="10dp"
+                                android:layout_marginLeft="20dp"
+                                android:layout_marginTop="10dp"
+                                android:src="@drawable/medallaoro" />
+
+                            <TextView
+                                android:id="@+id/Nombre_ranking1"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center_vertical|center_horizontal"
+                                android:layout_marginLeft="40dp"
+                                android:layout_marginRight="20dp"
+                                android:text="Nombre"
+                                android:textAppearance="?android:attr/textAppearanceLarge" />
+
+                            <TextView
+                                android:id="@+id/Puntuacion_ranking1"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center_vertical|center_horizontal"
+                                android:layout_marginLeft="150dp"
+                                android:layout_marginRight="20dp"
+                                android:text="200m"
+                                android:textAppearance="?android:attr/textAppearanceLarge"
+                                android:textSize="30dp" />
+                        </LinearLayout>
+                    </FrameLayout>
+
+					<FrameLayout
+					    android:id="@+id/puesto2"
+					    android:layout_width="match_parent"
+					    android:layout_height="wrap_content"
+					    android:layout_marginBottom="5dp"
+					    android:layout_marginLeft="20dp"
+					    android:layout_marginRight="20dp"
+					    android:layout_marginTop="5dp"
+					    android:background="@color/black_overlay"
+					    android:visibility="visible" >
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_marginRight="10dp" >
+
+                            <ImageView
+                   
+                                android:layout_width="50dp"
+                                android:layout_height="50dp"
+                                android:layout_gravity="center_vertical|center_horizontal"
+                                android:layout_marginBottom="10dp"
+                                android:layout_marginLeft="20dp"
+                                android:layout_marginTop="10dp"
+                                android:src="@drawable/medallaplata" />
+
+                            <TextView
+                                android:id="@+id/Nombre_ranking2"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center_vertical|center_horizontal"
+                                android:layout_marginLeft="40dp"
+                                android:layout_marginRight="20dp"
+                                android:text="Nombre"
+                                android:textAppearance="?android:attr/textAppearanceLarge" />
+
+                            <TextView
+                                android:id="@+id/Puntuacion_ranking2"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center_vertical|center_horizontal"
+                                android:layout_marginLeft="150dp"
+                                android:layout_marginRight="20dp"
+                                android:text="200m"
+                                android:textAppearance="?android:attr/textAppearanceLarge"
+                                android:textSize="30dp" />
+                        </LinearLayout>
+                    </FrameLayout>
+                    <FrameLayout
+                        android:id="@+id/puesto3"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="5dp"
+                        android:layout_marginLeft="20dp"
+                        android:layout_marginRight="20dp"
+                        android:layout_marginTop="5dp"
+                        android:background="@color/black_overlay" >
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_marginRight="10dp"
+                            android:visibility="visible" >
+
+                            <ImageView
+                           
+                                android:layout_width="50dp"
+                                android:layout_height="50dp"
+                                android:layout_gravity="center_vertical|center_horizontal"
+                                android:layout_marginBottom="10dp"
+                                android:layout_marginLeft="20dp"
+                                android:layout_marginTop="10dp"
+                                android:src="@drawable/medallabronce" />
+
+                            <TextView
+                                android:id="@+id/Nomre_ranking3"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center_vertical|center_horizontal"
+                                android:layout_marginLeft="40dp"
+                                android:layout_marginRight="20dp"
+                                android:text="Nombre"
+                                android:textAppearance="?android:attr/textAppearanceLarge" />
+
+                            <TextView
+                                android:id="@+id/Puntuacion_ranking3"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center_vertical|center_horizontal"
+                                android:layout_marginLeft="150dp"
+                                android:layout_marginRight="20dp"
+                                android:text="200m"
+                                android:textAppearance="?android:attr/textAppearanceLarge"
+                                android:textSize="30dp" />
+                        </LinearLayout>
+                    </FrameLayout>
+                    <FrameLayout
+                        android:id="@+id/puesto4"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="5dp"
+                        android:layout_marginLeft="20dp"
+                        android:layout_marginRight="20dp"
+                        android:layout_marginTop="5dp"
+                        android:background="@color/black_overlay" >
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_marginRight="10dp"
+                            android:visibility="visible" >
+
+                            <TextView
+                                android:id="@+id/textView1"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center_vertical|center_horizontal"
+                                android:layout_margin="5dp"
+                                android:paddingLeft="10dp"
+                                android:text="4"
+                                android:textAppearance="?android:attr/textAppearanceLarge"
+                                android:textSize="50dp" />
+
+                            <TextView
+                                android:id="@+id/Nombre_ranking4"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center_vertical|center_horizontal"
+                                android:layout_marginLeft="60dp"
+                                android:layout_marginRight="20dp"
+                                android:text="Nombre"
+                                android:textAppearance="?android:attr/textAppearanceLarge" />
+
+                            <TextView
+                                android:id="@+id/Puntuacion_ranking4"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center_vertical|center_horizontal"
+                                android:layout_marginLeft="150dp"
+                                android:layout_marginRight="20dp"
+                                android:text="200m"
+                                android:textAppearance="?android:attr/textAppearanceLarge"
+                                android:textSize="30dp" />
+                        </LinearLayout>
+                    </FrameLayout>
+					<FrameLayout
+					    android:id="@+id/puesto5"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="5dp"
+                        android:layout_marginLeft="20dp"
+                        android:layout_marginRight="20dp"
+                        android:layout_marginTop="5dp"
+                        android:background="@color/black_overlay" >
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_marginRight="10dp"
+                            android:visibility="visible" >
+
+                            <TextView
+                                
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center_vertical|center_horizontal"
+                                android:layout_margin="5dp"
+                                android:paddingLeft="10dp"
+                                android:text="5"
+                                android:textAppearance="?android:attr/textAppearanceLarge"
+                                android:textSize="50dp" />
+
+                            <TextView
+                                android:id="@+id/Nomre_ranking5"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center_vertical|center_horizontal"
+                                android:layout_marginLeft="60dp"
+                                android:layout_marginRight="20dp"
+                                android:text="Nombre"
+                                android:textAppearance="?android:attr/textAppearanceLarge" />
+
+                            <TextView
+                                android:id="@+id/Puntuacion_ranking5"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center_vertical|center_horizontal"
+                                android:layout_marginLeft="150dp"
+                                android:layout_marginRight="20dp"
+                                android:text="200m"
+                                android:textAppearance="?android:attr/textAppearanceLarge"
+                                android:textSize="30dp" />
+                        </LinearLayout>
+                    </FrameLayout>
+                    <FrameLayout
+                        android:id="@+id/puesto6"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="5dp"
+                        android:layout_marginLeft="20dp"
+                        android:layout_marginRight="20dp"
+                        android:layout_marginTop="5dp"
+                        android:background="@color/black_overlay" >
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_marginRight="10dp"
+                            android:visibility="visible" >
+
+                            <TextView
+                               
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center_vertical|center_horizontal"
+                                android:layout_margin="5dp"
+                                android:paddingLeft="10dp"
+                                android:text="6"
+                                android:textAppearance="?android:attr/textAppearanceLarge"
+                                android:textSize="50dp" />
+
+                            <TextView
+                                android:id="@+id/Nombre_ranking6"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center_vertical|center_horizontal"
+                                android:layout_marginLeft="60dp"
+                                android:layout_marginRight="20dp"
+                                android:text="Nombre"
+                                android:textAppearance="?android:attr/textAppearanceLarge" />
+
+                            <TextView
+                                android:id="@+id/Puntuacion_ranking6"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center_vertical|center_horizontal"
+                                android:layout_marginLeft="150dp"
+                                android:layout_marginRight="20dp"
+                                android:text="200m"
+                                android:textAppearance="?android:attr/textAppearanceLarge"
+                                android:textSize="30dp" />
+                        </LinearLayout>
+                    </FrameLayout>
+                    <FrameLayout
+                        android:id="@+id/puesto7"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="5dp"
+                        android:layout_marginLeft="20dp"
+                        android:layout_marginRight="20dp"
+                        android:layout_marginTop="5dp"
+                        android:background="@color/black_overlay" >
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_marginRight="10dp"
+                            android:visibility="visible" >
+
+                            <TextView
+                         
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center_vertical|center_horizontal"
+                                android:layout_margin="5dp"
+                                android:paddingLeft="10dp"
+                                android:text="7"
+                                android:textAppearance="?android:attr/textAppearanceLarge"
+                                android:textSize="50dp" />
+
+                            <TextView
+                                android:id="@+id/Nomre_ranking7"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center_vertical|center_horizontal"
+                                android:layout_marginLeft="60dp"
+                                android:layout_marginRight="20dp"
+                                android:text="Nombre"
+                                android:textAppearance="?android:attr/textAppearanceLarge" />
+
+                            <TextView
+                                android:id="@+id/Puntuacion_ranking7"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center_vertical|center_horizontal"
+                                android:layout_marginLeft="150dp"
+                                android:layout_marginRight="20dp"
+                                android:text="200m"
+                                android:textAppearance="?android:attr/textAppearanceLarge"
+                                android:textSize="30dp" />
+                        </LinearLayout>
+                    </FrameLayout>
+                    <FrameLayout
+                        android:id="@+id/puesto8"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="5dp"
+                        android:layout_marginLeft="20dp"
+                        android:layout_marginRight="20dp"
+                        android:layout_marginTop="5dp"
+                        android:background="@color/black_overlay" >
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_marginRight="10dp"
+                            android:visibility="visible" >
+
+                            <TextView
+                        
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center_vertical|center_horizontal"
+                                android:layout_margin="5dp"
+                                android:paddingLeft="10dp"
+                                android:text="8"
+                                android:textAppearance="?android:attr/textAppearanceLarge"
+                                android:textSize="50dp" />
+
+                            <TextView
+                                android:id="@+id/Nomre_ranking8"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center_vertical|center_horizontal"
+                                android:layout_marginLeft="60dp"
+                                android:layout_marginRight="20dp"
+                                android:text="Nombre"
+                                android:textAppearance="?android:attr/textAppearanceLarge" />
+
+                            <TextView
+                                android:id="@+id/Puntuacion_ranking8"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center_vertical|center_horizontal"
+                                android:layout_marginLeft="150dp"
+                                android:layout_marginRight="20dp"
+                                android:text="200m"
+                                android:textAppearance="?android:attr/textAppearanceLarge"
+                                android:textSize="30dp" />
+                        </LinearLayout>
+                    </FrameLayout>
+                    <FrameLayout
+                        android:id="@+id/puesto9"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="5dp"
+                        android:layout_marginLeft="20dp"
+                        android:layout_marginRight="20dp"
+                        android:layout_marginTop="5dp"
+                        android:background="@color/black_overlay" >
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_marginRight="10dp" >
+
+                            <TextView
+                  
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center_vertical|center_horizontal"
+                                android:layout_margin="5dp"
+                                android:paddingLeft="10dp"
+                                android:text="9"
+                                android:textAppearance="?android:attr/textAppearanceLarge"
+                                android:textSize="50dp" />
+
+                            <TextView
+                                android:id="@+id/Nombre_ranking9"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center_vertical|center_horizontal"
+                                android:layout_marginLeft="60dp"
+                                android:layout_marginRight="20dp"
+                                android:text="Nombre"
+                                android:textAppearance="?android:attr/textAppearanceLarge" />
+
+                            <TextView
+                                android:id="@+id/Puntuacion_nombre9"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center_vertical|center_horizontal"
+                                android:layout_marginLeft="150dp"
+                                android:layout_marginRight="20dp"
+                                android:text="200m"
+                                android:textAppearance="?android:attr/textAppearanceLarge"
+                                android:textSize="30dp" />
+                        </LinearLayout>
+                    </FrameLayout>
+                    <FrameLayout
+                        android:id="@+id/puesto10"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="5dp"
+                        android:layout_marginLeft="20dp"
+                        android:layout_marginRight="20dp"
+                        android:layout_marginTop="5dp"
+                        android:background="@color/black_overlay" >
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_marginRight="10dp" >
+
+                            <TextView
+                              
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center_vertical|center_horizontal"
+                                android:layout_margin="5dp"
+                                android:paddingLeft="10dp"
+                                android:text="10"
+                                android:textAppearance="?android:attr/textAppearanceLarge"
+                                android:textSize="50dp" />
+
+                            <TextView
+                                android:id="@+id/Nomre_ranking10"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center_vertical|center_horizontal"
+                                android:layout_marginLeft="30dp"
+                                android:layout_marginRight="20dp"
+                                android:text="Nombre"
+                                android:textAppearance="?android:attr/textAppearanceLarge" />
+
+                            <TextView
+                                android:id="@+id/Puntuacion_ranking10"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center_vertical|center_horizontal"
+                                android:layout_marginLeft="150dp"
+                                android:layout_marginRight="20dp"
+                                android:text="200m"
+                                android:textAppearance="?android:attr/textAppearanceLarge"
+                                android:textSize="30dp" />
+                        </LinearLayout>
+                    </FrameLayout>
+                </LinearLayout>
+            </ScrollView>
+      >
+	</LinearLayout>
+</FrameLayout>

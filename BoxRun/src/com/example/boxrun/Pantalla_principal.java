@@ -70,7 +70,7 @@ public class Pantalla_principal extends Activity {
 		startActivity(actividadTienda);
 	}
 	public void ir_a_ranking(View v){
-		Intent actividadRanking = new Intent (this, Pantalla_ajustes.class);
+		Intent actividadRanking = new Intent (this, Pantalla_Ranking.class);
 		startActivity(actividadRanking);
 	}
 		

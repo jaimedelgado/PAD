@@ -68,6 +68,7 @@ public class Pantalla_tienda extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		setContentView(R.layout.activity_tienda);
 		dinero = (TextView) findViewById(R.id.tienda_dinero_total);
 		dinero.setText(String.valueOf(this.monedas()));
 		dineroEscudo = (TextView) findViewById(R.id.dineroEscudo);
@@ -82,17 +83,17 @@ public class Pantalla_tienda extends Activity {
 		dineroLlama = (TextView) findViewById(R.id.dineroLlama);
 		nivelFuego = nivelFuego();
 		switch(nivelFuego){
-		case 0: dineroEscudo.setText(String.valueOf(Utils.precio_llama_1)); break;
-		case 1: dineroEscudo.setText(String.valueOf(Utils.precio_llama_2)); break;
-		case 2: dineroEscudo.setText(String.valueOf(Utils.precio_llama_3)); break;
-		case 3: dineroEscudo.setText(String.valueOf(Utils.precio_llama_4)); break;
-		case 4: dineroEscudo.setText(String.valueOf(Utils.precio_llama_5)); break;
+		case 0: dineroLlama.setText(String.valueOf(Utils.precio_llama_1)); break;
+		case 1: dineroLlama.setText(String.valueOf(Utils.precio_llama_2)); break;
+		case 2: dineroLlama.setText(String.valueOf(Utils.precio_llama_3)); break;
+		case 3: dineroLlama.setText(String.valueOf(Utils.precio_llama_4)); break;
+		case 4: dineroLlama.setText(String.valueOf(Utils.precio_llama_5)); break;
 		}
 		RatingBar estrellas1 = (RatingBar) findViewById(R.id.ratingBar1);
 		estrellas1.setNumStars(nivelEscudo);
 		RatingBar estrellas2 = (RatingBar) findViewById(R.id.ratingBar2);
 		estrellas2.setNumStars(nivelFuego);
-		setContentView(R.layout.activity_tienda);
+		
 		
 
 	}
