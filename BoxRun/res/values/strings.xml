@@ -23,5 +23,6 @@
     <string name="Tienda_escudo_titulo">Escudo</string>
     <string name="Ranking_button_description">Ranking_button_description</string>
     <string name="title_activity_pantalla_juego">pantalla_juego</string>
+    <string name="title_activity_pantalla__nombre">Pantalla_Nombre</string>
 
 </resources>

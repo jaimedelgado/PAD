@@ -1,5 +1,18 @@
 package com.example.boxrun;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import org.xml.sax.SAXException;
+
 import com.example.boxrun.util.SystemUiHider;
 
 import android.annotation.TargetApi;
@@ -10,6 +23,8 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.RatingBar;
+import android.widget.TextView;
 
 /**
  * An example full-screen activity that shows and hides the system UI (i.e.
@@ -45,121 +60,175 @@ public class Pantalla_tienda extends Activity {
 	 * The instance of the {@link SystemUiHider} for this activity.
 	 */
 	private SystemUiHider mSystemUiHider;
-
+	private TextView dinero=null;
+	private TextView dineroEscudo =null;
+	private TextView dineroLlama=null;
+	private int nivelEscudo=0;
+	private int nivelFuego=0;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-
+		dinero = (TextView) findViewById(R.id.tienda_dinero_total);
+		dinero.setText(String.valueOf(this.monedas()));
+		dineroEscudo = (TextView) findViewById(R.id.dineroEscudo);
+		nivelEscudo = nivelEscudo();
+		switch(nivelEscudo){
+		case 0: dineroEscudo.setText(String.valueOf(Utils.precio_escudo_1)); break;
+		case 1: dineroEscudo.setText(String.valueOf(Utils.precio_escudo_2)); break;
+		case 2: dineroEscudo.setText(String.valueOf(Utils.precio_escudo_3)); break;
+		case 3: dineroEscudo.setText(String.valueOf(Utils.precio_escudo_4)); break;
+		case 4: dineroEscudo.setText(String.valueOf(Utils.precio_escudo_5)); break;
+		}
+		dineroLlama = (TextView) findViewById(R.id.dineroLlama);
+		nivelFuego = nivelFuego();
+		switch(nivelFuego){
+		case 0: dineroEscudo.setText(String.valueOf(Utils.precio_llama_1)); break;
+		case 1: dineroEscudo.setText(String.valueOf(Utils.precio_llama_2)); break;
+		case 2: dineroEscudo.setText(String.valueOf(Utils.precio_llama_3)); break;
+		case 3: dineroEscudo.setText(String.valueOf(Utils.precio_llama_4)); break;
+		case 4: dineroEscudo.setText(String.valueOf(Utils.precio_llama_5)); break;
+		}
+		RatingBar estrellas1 = (RatingBar) findViewById(R.id.ratingBar1);
+		estrellas1.setNumStars(nivelEscudo);
+		RatingBar estrellas2 = (RatingBar) findViewById(R.id.ratingBar2);
+		estrellas2.setNumStars(nivelFuego);
 		setContentView(R.layout.activity_tienda);
-/*
-		final View controlsView = findViewById(R.id.fullscreen_content_controls);
-		final View contentView = findViewById(R.id.fullscreen_content);
+		
 
-		// Set up an instance of SystemUiHider to control the system UI for
-		// this activity.
-		mSystemUiHider = SystemUiHider.getInstance(this, contentView,
-				HIDER_FLAGS);
-		mSystemUiHider.setup();
-		mSystemUiHider
-				.setOnVisibilityChangeListener(new SystemUiHider.OnVisibilityChangeListener() {
-					// Cached values.
-					int mControlsHeight;
-					int mShortAnimTime;
+	}
 
-					@Override
-					@TargetApi(Build.VERSION_CODES.HONEYCOMB_MR2)
-					public void onVisibilityChange(boolean visible) {
-						if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR2) {
-							// If the ViewPropertyAnimator API is available
-							// (Honeycomb MR2 and later), use it to animate the
-							// in-layout UI controls at the bottom of the
-							// screen.
-							if (mControlsHeight == 0) {
-								mControlsHeight = controlsView.getHeight();
-							}
-							if (mShortAnimTime == 0) {
-								mShortAnimTime = getResources().getInteger(
-										android.R.integer.config_shortAnimTime);
-							}
-							controlsView
-									.animate()
-									.translationY(visible ? 0 : mControlsHeight)
-									.setDuration(mShortAnimTime);
-						} else {
-							// If the ViewPropertyAnimator APIs aren't
-							// available, simply show or hide the in-layout UI
-							// controls.
-							controlsView.setVisibility(visible ? View.VISIBLE
-									: View.GONE);
-						}
-
-						if (visible && AUTO_HIDE) {
-							// Schedule a hide().
-							delayedHide(AUTO_HIDE_DELAY_MILLIS);
-						}
-					}
-				});
-
-		// Set up the user interaction to manually show or hide the system UI.
-		contentView.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View view) {
-				if (TOGGLE_ON_CLICK) {
-					mSystemUiHider.toggle();
-				} else {
-					mSystemUiHider.show();
-				}
+	
+	public void mejorarEscudo(View v){
+		int dinero = Integer.parseInt((String) this.dinero.getText());
+		int dineroEscudo = Integer.parseInt((String) this.dineroEscudo.getText());
+		if(dinero>=dineroEscudo && this.nivelEscudo<5){
+			dinero-=dineroEscudo;
+			this.dinero.setText(String.valueOf(dinero));
+			this.nivelEscudo++;
+			switch(nivelEscudo){
+			case 0: this.dineroEscudo.setText(String.valueOf(Utils.precio_escudo_1)); break;
+			case 1: this.dineroEscudo.setText(String.valueOf(Utils.precio_escudo_2)); break;
+			case 2: this.dineroEscudo.setText(String.valueOf(Utils.precio_escudo_3)); break;
+			case 3: this.dineroEscudo.setText(String.valueOf(Utils.precio_escudo_4)); break;
+			case 4: this.dineroEscudo.setText(String.valueOf(Utils.precio_escudo_5)); break;
 			}
-		});
+		}
 
-		// Upon interacting with UI controls, delay any scheduled hide()
-		// operations to prevent the jarring behavior of controls going away
-		// while interacting with the UI.
-		findViewById(R.id.dummy_button).setOnTouchListener(
-				mDelayHideTouchListener);
 	}
-
-	@Override
-	protected void onPostCreate(Bundle savedInstanceState) {
-		super.onPostCreate(savedInstanceState);
-
-		// Trigger the initial hide() shortly after the activity has been
-		// created, to briefly hint to the user that UI controls
-		// are available.
-		delayedHide(100);*/
-	}
-
-	/**
-	 * Touch listener to use for in-layout UI controls to delay hiding the
-	 * system UI. This is to prevent the jarring behavior of controls going away
-	 * while interacting with activity UI.
-	 */
-	View.OnTouchListener mDelayHideTouchListener = new View.OnTouchListener() {
-		@Override
-		public boolean onTouch(View view, MotionEvent motionEvent) {
-			if (AUTO_HIDE) {
-				delayedHide(AUTO_HIDE_DELAY_MILLIS);
+	public void mejorarLlama(View v){
+		int dinero = Integer.parseInt((String) this.dinero.getText());
+		int dineroLlama = Integer.parseInt((String) this.dineroLlama.getText());
+		if(dinero>=dineroLlama && this.nivelFuego<5){
+			dinero-=dineroLlama;
+			this.dinero.setText(String.valueOf(dinero));
+			this.nivelFuego++;
+			switch(nivelFuego){
+			case 0: this.dineroLlama.setText(String.valueOf(Utils.precio_llama_1)); break;
+			case 1: this.dineroLlama.setText(String.valueOf(Utils.precio_llama_2)); break;
+			case 2: this.dineroLlama.setText(String.valueOf(Utils.precio_llama_3)); break;
+			case 3: this.dineroLlama.setText(String.valueOf(Utils.precio_llama_4)); break;
+			case 4: this.dineroLlama.setText(String.valueOf(Utils.precio_llama_5)); break;
 			}
-			return false;
 		}
-	};
-
-	Handler mHideHandler = new Handler();
-	Runnable mHideRunnable = new Runnable() {
-		@Override
-		public void run() {
-			mSystemUiHider.hide();
-		}
-	};
-
-	/**
-	 * Schedules a call to hide() in [delay] milliseconds, canceling any
-	 * previously scheduled calls.
-	 */
-	private void delayedHide(int delayMillis) {
-		mHideHandler.removeCallbacks(mHideRunnable);
-		mHideHandler.postDelayed(mHideRunnable, delayMillis);
 	}
+	public int nivelFuego(){
+		int nivel = 0;
+		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+		DocumentBuilder db;		
+		try {
+			db = dbf.newDocumentBuilder();
+			Document doc = db.parse(openFileInput("Configuracion.txt"));
+			Element raiz = doc.getDocumentElement();
+
+		    //Obtener la lista de nodos que tienen etiqueta "EMPLEADO"
+		    Node tienda = raiz.getElementsByTagName("tienda").item(0);
+		    NodeList objetos = tienda.getOwnerDocument().getElementsByTagName("objeto");
+		    for(int i=0; i<objetos.getLength(); i++){
+		    	Node objeto = objetos.item(i);
+		    	String nombre = objeto.getAttributes().getNamedItem("nombreObjeto").getNodeValue();
+		    	if(nombre.equals("llama")){ 
+		    		nivel = Integer.parseInt(objeto.getAttributes().getNamedItem("nivel").getNodeValue());
+		    	}
+		    }
+		   
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (SAXException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}catch (ParserConfigurationException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		return nivel;
+	}
+	public int nivelEscudo(){
+		int nivel = 0;
+		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+		DocumentBuilder db;		
+		try {
+			db = dbf.newDocumentBuilder();
+			Document doc = db.parse(openFileInput("Configuracion.txt"));
+			Element raiz = doc.getDocumentElement();
+
+		    //Obtener la lista de nodos que tienen etiqueta "EMPLEADO"
+		    Node tienda = raiz.getElementsByTagName("tienda").item(0);
+		    NodeList objetos = tienda.getOwnerDocument().getElementsByTagName("objeto");
+		    for(int i=0; i<objetos.getLength(); i++){
+		    	Node objeto = objetos.item(i);
+		    	String nombre = objeto.getAttributes().getNamedItem("nombreObjeto").getNodeValue();
+		    	if(nombre.equals("escudo")){ 
+		    		nivel = Integer.parseInt(objeto.getAttributes().getNamedItem("nivel").getNodeValue());
+		    	}
+		    }
+		   
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (SAXException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}catch (ParserConfigurationException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		return nivel;
+	}
+	public int monedas(){
+		int monedas = 0;
+		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+		DocumentBuilder db;		
+		try {
+			db = dbf.newDocumentBuilder();
+			Document doc = db.parse(openFileInput("Configuracion.txt"));
+			Element raiz = doc.getDocumentElement();
+
+		    //Obtener la lista de nodos que tienen etiqueta "EMPLEADO"
+		    Node jugador = raiz.getElementsByTagName("jugador").item(0);
+		    monedas = Integer.parseInt(jugador.getAttributes().getNamedItem("monedas").getNodeValue());
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (SAXException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}catch (ParserConfigurationException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		return monedas;
+	}
+	
 	public void ir_a_principal(View v){
 		Intent actividadPrincipal = new Intent (this, Pantalla_principal.class);
 		startActivity(actividadPrincipal);

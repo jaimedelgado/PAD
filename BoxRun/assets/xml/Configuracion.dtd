@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!ELEMENT jugador EMPTY>
+<!ATTLIST jugador
+	id CDATA #REQUIRED
+	nombre CDATA #REQUIRED
+	monedas CDATA ""
+	maxPuntuacion CDATA "0"
+>
+
+<!ELEMENT tienda (objeto*)>
+
+<!ELEMENT objeto EMPTY>
+<!ATTLIST objeto
+	nombre CDATA #REQUIRED
+	nivel CDATA "0"
+>
